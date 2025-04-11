@@ -1,0 +1,63 @@
+<div class="h-screen w-full bg-[#00121C] flex">
+  <!-- Sidebar -->
+  <div
+    class="m-4 p-4 rounded-2xl bg-[#011F2F] shadow-[8px_8px_16px_#000812,-8px_-8px_16px_#001C2E] text-white flex flex-col justify-between transition-all duration-300"
+    [ngClass]="{ 'w-64': !isCollapsed, 'w-16': isCollapsed }"
+  >
+    <!-- Top: Logo & Toggle Button -->
+    <div>
+      <div class="flex justify-between items-center mb-6">
+        <h1
+          class="text-xl font-['Inknut_Antiqua'] transition-opacity duration-300"
+          [ngClass]="{ 'opacity-0 hidden': isCollapsed }"
+        >
+          Block Sentinel
+        </h1>
+        <button (click)="toggleSidebar()" class="text-white focus:outline-none">
+          <i class="fas" [ngClass]="isCollapsed ? 'fa-angle-right' : 'fa-angle-left'"></i>
+        </button>
+      </div>
+
+      <!-- Menu Items -->
+      <nav class="space-y-2">
+        <a href="/dashboard/registration" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#0E8CCF] hover:rounded-xl transition-all">
+          <i class="fas fa-user-plus"></i>
+          <span [ngClass]="{ 'hidden': isCollapsed }">Registration</span>
+        </a>
+        <a href="/dashboard/management" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#0E8CCF] hover:rounded-xl transition-all">
+          <i class="fas fa-cogs"></i>
+          <span [ngClass]="{ 'hidden': isCollapsed }">Management</span>
+        </a>
+        <a href="/dashboard/logs" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#0E8CCF] hover:rounded-xl transition-all">
+          <i class="fas fa-file-alt"></i>
+          <span [ngClass]="{ 'hidden': isCollapsed }">Logs</span>
+        </a>
+        <a href="/dashboard/sync-status" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#0E8CCF] hover:rounded-xl transition-all">
+          <i class="fas fa-sync-alt"></i>
+          <span [ngClass]="{ 'hidden': isCollapsed }">Sync Status</span>
+        </a>
+        <a href="/dashboard/settings" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#0E8CCF] hover:rounded-xl transition-all">
+          <i class="fas fa-sliders-h"></i>
+          <span [ngClass]="{ 'hidden': isCollapsed }">Settings</span>
+        </a>
+        <a href="/dashboard/health" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#0E8CCF] hover:rounded-xl transition-all">
+          <i class="fas fa-heartbeat"></i>
+          <span [ngClass]="{ 'hidden': isCollapsed }">Health</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Bottom: Logout Button -->
+    <div class="mt-4">
+      <button class="w-full bg-[#00121C] text-white py-2 rounded-full shadow-[4px_4px_8px_#000,_-4px_-4px_8px_#0a2a3f] hover:bg-[#022b3a] transition">
+        <i class="fas fa-sign-out-alt"></i>
+        <span [ngClass]="{ 'hidden': isCollapsed }">Logout</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Content -->
+  <div class="flex-1 p-6 text-white">
+    <!-- Your dashboard-overview content goes here -->
+  </div>
+</div>
