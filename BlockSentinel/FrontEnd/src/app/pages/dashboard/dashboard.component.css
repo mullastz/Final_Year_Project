@@ -1,0 +1,16 @@
+.nav-tab {
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+
+.nav-tab:hover {
+    color: #0E8CCF;
+    text-decoration: underline;
+  }
+  
+  .active-link {
+    color: #0E8CCF !important;
+    text-decoration: underline !important;
+  }
+  

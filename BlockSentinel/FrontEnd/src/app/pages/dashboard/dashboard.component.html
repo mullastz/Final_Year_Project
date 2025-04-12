@@ -1,0 +1,98 @@
+<div class="flex h-screen w-full bg-[#00121C]">
+  <!-- Sidebar -->
+  <app-menu-bar></app-menu-bar>
+
+  <!-- Main Content Area -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Sticky Header -->
+    <app-header></app-header>
+
+    <!-- Router Outlet or Page Content -->
+    <div class="flex-1 overflow-auto">
+      <div class="flex items-center justify-between px-6 py-4 bg-[#00121C]">
+        <!-- Left Section: Navigation Tabs -->
+        <div class="flex space-x-10">
+          <a
+            routerLink="/dashboard/overview"
+            routerLinkActive="active-link"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-tab"
+          >
+            Overview
+          </a>
+          <a
+            routerLink="/dashboard/alert"
+            routerLinkActive="active-link"
+            class="nav-tab"
+          >
+            Alerts
+          </a>
+          <a
+            routerLink="/dashboard/activity"
+            routerLinkActive="active-link"
+            class="nav-tab"
+          >
+            Activity
+          </a>
+        </div>
+        
+      
+        <!-- Right Section: Filter Dropdown -->
+        <div class="relative">
+          <button
+            (click)="toggleFilterDropdown()"
+            class="flex items-center gap-2 bg-[#011F2F] text-white px-4 py-2 rounded-md border border-black hover:shadow-md transition"
+          >
+            Filter
+            <svg class="w-4 h-4 fill-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M7 10l5 5 5-5H7z" />
+            </svg>
+          </button>
+      
+          <!-- Dropdown menu -->
+          <div
+            *ngIf="showFilterDropdown"
+            class="absolute right-0 mt-2 w-64 bg-[#011F2F] text-white p-4 rounded-md shadow-lg z-10 space-y-3"
+          >
+            <!-- Filter Inputs -->
+            <div>
+              <label class="block text-sm mb-1">Filter by Date</label>
+              <input
+                type="date"
+                class="w-full bg-[#00121C] text-white px-3 py-2 rounded-md border border-black outline-none"
+              />
+            </div>
+            <div>
+              <label class="block text-sm mb-1">Severity Level</label>
+              <select
+                class="w-full bg-[#00121C] text-white px-3 py-2 rounded-md border border-black outline-none"
+              >
+                <option value="">All</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            <div>
+              <button
+                class="w-full mt-2 bg-[#0E8CCF] text-white px-3 py-2 rounded-md hover:bg-[#0c76af] transition"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Separator Line -->
+      <div class="w-full border-t border-gray-300 my-4"></div>
+
+      <div class="p-6">
+        <router-outlet></router-outlet>
+      </div>
+      
+      
+    </div>
+  </div>
+</div>
+

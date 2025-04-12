@@ -1,0 +1,45 @@
+<div class="w-full bg-[#00121C] text-white px-6 py-4 flex justify-between items-center shadow-md rounded-b-2xl">
+    <!-- Left: Page Title -->
+    <div class="text-2xl font-semibold capitalize">
+      {{ currentPage }}
+    </div>
+  
+    <!-- Right: Search, Notifications, Profile -->
+    <div class="flex items-center gap-6">
+      <!-- Search Bar -->
+      <div class="relative">
+        <input
+          type="text"
+          placeholder="Search..."
+          class="bg-[#011F2F] border border-black rounded-full pl-10 pr-4 py-2 placeholder-white text-white focus:outline-none shadow-inner shadow-[#0008]"
+        />
+        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-white"></i>
+      </div>
+  
+      <!-- Notifications -->
+      <a [routerLink]="['/dashboard/notifications']" class="text-white hover:text-[#0E8CCF] transition">
+        <i class="fas fa-bell text-xl"></i>
+      </a>
+  
+      <!-- Profile -->
+      <div class="relative">
+        <button (click)="toggleDropdown()" class="w-10 h-10 rounded-full overflow-hidden focus:outline-none border border-white hover:border-[#0E8CCF] transition">
+          <img *ngIf="false; else defaultIcon" src="assets/admin-profile.jpg" alt="Admin" class="w-full h-full object-cover" />
+          <ng-template #defaultIcon>
+            <i class="fas fa-user text-xl w-full h-full flex items-center justify-center text-white"></i>
+          </ng-template>
+        </button>
+  
+        <!-- Dropdown -->
+        <div *ngIf="showDropdown" class="absolute right-0 mt-2 w-40 bg-[#011F2F] rounded-lg shadow-lg py-2 z-10">
+          <a [routerLink]="['/dashboard/profile']" class="flex items-center px-4 py-2 hover:bg-[#0E8CCF] rounded-md transition">
+            <i class="fas fa-user-circle mr-2"></i> Profile
+          </a>
+          <button class="w-full flex items-center px-4 py-2 hover:bg-[#0E8CCF] rounded-md transition text-left">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
