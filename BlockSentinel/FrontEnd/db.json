@@ -1,0 +1,33 @@
+{
+    "systems": [
+      {
+        "id": "SYS001",
+        "name": "Student Grade Management",
+        "logoUrl": "assets/logo1.png",
+        "status": "active",
+        "alert": "None"
+      },
+      {
+        "id": "SYS002",
+        "name": "Medical Records System",
+        "logoUrl": "assets/logo2.png",
+        "status": "inactive",
+        "alert": "Critical Vulnerability"
+      },
+      {
+        "id": "SYS003",
+        "name": "Financial Tracker",
+        "logoUrl": "assets/logo3.png",
+        "status": "active",
+        "alert": "Medium Risk"
+      },
+      {
+        "id": "SYS004",
+        "name": "Academic Results Portal",
+        "logoUrl": "assets/logo4.png",
+        "status": "active",
+        "alert": "None"
+      }
+    ]
+  }
+  
