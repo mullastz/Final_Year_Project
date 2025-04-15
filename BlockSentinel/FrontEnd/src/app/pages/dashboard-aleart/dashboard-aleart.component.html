@@ -1,1 +1,51 @@
-<p>dashboard-aleart works!</p>
+<!-- Alert Notification Card -->
+<div class="bg-[#011F2F] shadow-lg rounded-lg mt-6 px-6 py-4 text-white max-h-[500px] overflow-y-auto">
+    <!-- Card Header -->
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-semibold">Alert Notification</h2>
+      <!-- Download Dropdown -->
+      <div class="relative">
+        <button (click)="toggleDownloadDropdown()" class="border border-[#00121C] text-white px-4 py-1 rounded-md bg-[#00121C]">
+          Download
+        </button>
+        <div *ngIf="isDownloadDropdownOpen" class="absolute right-0 mt-1 bg-[#00121C] text-sm rounded shadow-lg w-36 z-10">
+          <a href="#" class="block px-3 py-2 hover:bg-[#0E8CCF] rounded-md">PDF</a>
+          <a href="#" class="block px-3 py-2 hover:bg-[#0E8CCF] rounded-md">CSV</a>
+          <a href="#" class="block px-3 py-2 hover:bg-[#0E8CCF] rounded-md">Excel</a>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-left">
+        <thead class="bg-[#00121C] text-white">
+          <tr>
+            <th class="py-2 px-3">Severity</th>
+            <th class="py-2 px-3">Alert Message</th>
+            <th class="py-2 px-3">Date & Time</th>
+            <th class="py-2 px-3">Status</th>
+            <th class="py-2 px-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let alert of alerts" class="border-b border-[#0E8CCF]/20">
+            <td class="py-2 px-3 font-medium">
+              <span *ngIf="alert.severity === 'Critical'">🔴 Critical</span>
+              <span *ngIf="alert.severity === 'Warning'">🟠 Warning</span>
+              <span *ngIf="alert.severity === 'Info'">🔵 Info</span>
+            </td>
+            <td class="py-2 px-3">{{ alert.message }}</td>
+            <td class="py-2 px-3">{{ alert.date }}, {{ alert.time }}</td>
+            <td class="py-2 px-3">{{ alert.status }}</td>
+            <td class="py-2 px-3">
+              <button class="bg-[#00121C] px-3 py-1 rounded text-white hover:bg-[#007bb5] transition">
+                View More
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

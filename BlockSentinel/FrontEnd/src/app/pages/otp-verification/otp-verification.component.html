@@ -1,0 +1,41 @@
+<div class="flex justify-center items-center min-h-screen bg-[#00121C] px-4">
+    <div class="bg-[#011F2F] text-white rounded-lg shadow-md p-8 w-full max-w-md text-center">
+      
+      <!-- Title -->
+      <h2 class="text-2xl font-bold mb-4">🔒 OTP Verification</h2>
+      <p class="text-sm mb-6 text-gray-300">
+        A 6-digit verification code has been sent to your email. Please enter it below.
+      </p>
+  
+      <!-- OTP Input -->
+      <input
+        type="text"
+        maxlength="6"
+        [(ngModel)]="otpCode"
+        class="w-full text-center px-4 py-2 mb-4 border rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]"
+        placeholder="Enter OTP"
+      />
+  
+      <!-- Verify Button -->
+      <button
+        (click)="verifyOtp()"
+        class="w-full bg-[#0E8CCF] text-white py-2 rounded-md hover:bg-[#0C7BB8] transition"
+      >
+        Verify
+      </button>
+  
+      <!-- Resend OTP -->
+      <div class="mt-4 text-sm text-gray-400">
+        Didn’t receive it?
+        <button (click)="resendOtp()" class="text-[#0E8CCF] hover:underline">
+          Resend OTP
+        </button>
+      </div>
+  
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="mt-3 text-red-400 text-sm">
+        {{ errorMessage }}
+      </div>
+    </div>
+  </div>
+  

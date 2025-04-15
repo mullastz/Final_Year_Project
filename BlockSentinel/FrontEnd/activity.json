@@ -1,0 +1,85 @@
+{
+    "activivty":[
+    {
+      "timestamp": "2025-03-21",
+      "time": "10:15",
+      "user": "Admin John",
+      "action": "Updated Grade",
+      "affectedData": "Student ID: 12345",
+      "status": "Success"
+    },
+    {
+      "timestamp": "2025-03-20",
+      "time": "14:22",
+      "user": "System Bot",
+      "action": "Attempted Data Sync",
+      "affectedData": "System: Academic Records",
+      "status": "Warning"
+    },
+    {
+      "timestamp": "2025-03-19",
+      "time": "18:10",
+      "user": "Admin Lisa",
+      "action": "Failed Login",
+      "affectedData": "User Account: Lisa",
+      "status": "Failed"
+    },
+    {
+      "timestamp": "2025-03-18",
+      "time": "09:45",
+      "user": "Admin John",
+      "action": "Created New Course",
+      "affectedData": "Course ID: 67890",
+      "status": "Success"
+    },
+    {
+      "timestamp": "2025-03-17",
+      "time": "11:30",
+      "user": "System Bot",
+      "action": "Scheduled Backup",
+      "affectedData": "System: Database",
+      "status": "Success"
+    },
+    {
+        "timestamp": "2025-03-21",
+        "time": "10:15",
+        "user": "Admin John",
+        "action": "Updated Grade",
+        "affectedData": "Student ID: 12345",
+        "status": "Success"
+      },
+      {
+        "timestamp": "2025-03-20",
+        "time": "14:22",
+        "user": "System Bot",
+        "action": "Attempted Data Sync",
+        "affectedData": "System: Academic Records",
+        "status": "Warning"
+      },
+      {
+        "timestamp": "2025-03-19",
+        "time": "18:10",
+        "user": "Admin Lisa",
+        "action": "Failed Login",
+        "affectedData": "User Account: Lisa",
+        "status": "Failed"
+      },
+      {
+        "timestamp": "2025-03-18",
+        "time": "09:45",
+        "user": "Admin John",
+        "action": "Created New Course",
+        "affectedData": "Course ID: 67890",
+        "status": "Success"
+      },
+      {
+        "timestamp": "2025-03-17",
+        "time": "11:30",
+        "user": "System Bot",
+        "action": "Scheduled Backup",
+        "affectedData": "System: Database",
+        "status": "Success"
+      }
+
+  ]
+}

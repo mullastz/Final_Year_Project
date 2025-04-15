@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SystemService } from '../../services/registered-system.service';
+import { SystemService } from '../../services/registered-system/registered-system.service';
 import { RegisteredSystem } from '../../interface/registered-system';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
@@ -7,6 +7,8 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { RouterModule } from '@angular/router';
 import { ChartConfiguration } from 'chart.js';
+import { TransactionService } from '../../services/transaction.service';
+import { Transaction } from '../../interface/transaction';
 
 @Component({
   selector: 'app-dashboard-overview',
@@ -21,18 +23,34 @@ export class DashboardOverviewComponent implements OnInit {
 
   hoveredCard: string | null = null;
   openMenu: string | null = null;
+  transaction: Transaction[] = [];
 
-  constructor(private systemService: SystemService) {}
+
+  constructor(private systemService: SystemService,
+              private transactionService: TransactionService
+
+  ) {}
 
   ngOnInit(): void {
     this.systemService.getRegisteredSystems().subscribe((data) => {
       this.systems = data;
+    });
+    
+    this.transactionService.getTransaction().subscribe((data) => {
+      this.transaction = data;
     });
   }
 
   toggleMenu(id: string): void {
     this.openMenu = this.openMenu === id ? null : id;
   }
+
+  isDownloadDropdownOpen: boolean = false;
+
+toggleDownloadDropdown(): void {
+  this.isDownloadDropdownOpen = !this.isDownloadDropdownOpen;
+}
+
 
   // Health Monitoring Chart Data
   lineChartData: ChartConfiguration<'line'>['data'] = {

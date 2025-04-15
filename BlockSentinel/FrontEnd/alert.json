@@ -1,0 +1,81 @@
+{
+    "alert":[
+    {
+      "severity": "Critical",
+      "message": "Unauthorized DB access attempt",
+      "date": "2025-03-16",
+      "time": "14:30:21",
+      "status": "Unresolved"
+    },
+    {
+      "severity": "Warning",
+      "message": "Multiple failed login attempts",
+      "date": "2025-03-15",
+      "time": "12:05:10",
+      "status": "Resolved"
+    },
+    {
+      "severity": "Info",
+      "message": "Scheduled backup completed",
+      "date": "2025-03-14",
+      "time": "09:45:00",
+      "status": "Resolved"
+    },
+    {
+      "severity": "Critical",
+      "message": "Data breach detected",
+      "date": "2025-03-17",
+      "time": "16:20:00",
+      "status": "Unresolved"
+    },
+    {
+      "severity": "Warning",
+      "message": "Disk space running low",
+      "date": "2025-03-18",
+      "time": "10:15:00",
+      "status": "Resolved"
+    },
+    {
+      "severity": "Info",
+      "message": "System maintenance scheduled",
+      "date": "2025-03-19",
+      "time": "22:00:00",
+      "status": "Resolved"
+    },
+    {
+      "severity": "Critical",
+      "message": "Malware detected in system files",
+      "date": "2025-03-16",
+      "time": "11:00:00",
+      "status": "Unresolved"
+    },
+    {
+      "severity": "Warning",
+      "message": "Network latency detected",
+      "date": "2025-03-17",
+      "time": "13:00:00",
+      "status": "Resolved"
+    },
+    {
+      "severity": "Info",
+      "message": "User account created",
+      "date": "2025-03-15",
+      "time": "08:00:00",
+      "status": "Resolved"
+    },
+    {
+      "severity": "Critical",
+      "message": "Data integrity check failed",
+      "date": "2025-03-17",
+      "time": "10:00:00",
+      "status": "Unresolved"
+    },
+    {
+      "severity": "Warning",
+      "message": "System resource usage high",
+      "date": "2025-03-18",
+      "time": "08:30:00",
+      "status": "Resolved"
+    }
+  ]
+}
