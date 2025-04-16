@@ -1,9 +1,9 @@
 <div class="text-white px-6">
     <h2 class="text-xl font-semibold mb-4">Registered System</h2>
   
-    <div class="grid gap-6" [ngClass]="isMenuBarOpen ? 'grid-cols-3' : 'grid-cols-4'">
+    <div class="grid gap-6" [ngClass]="isMenuBarOpen ? 'grid-cols-3' : 'grid-cols-4'" >
       <div
-        *ngFor="let system of systems | slice:0:(isMenuBarOpen ? 3 : 4)"
+        *ngFor="let system of systems "
         class="p-4 rounded-lg shadow-md cursor-pointer transition duration-300 transform hover:scale-105"
         [ngClass]="{
           'bg-[#011F2F]': !hoveredCard || hoveredCard !== system.id,
@@ -11,6 +11,7 @@
         }"
         (mouseenter)="hoveredCard = system.id"
         (mouseleave)="hoveredCard = null"
+        (click)="goToSystemDetail(system.id)"
       >
         <!-- Header -->
         <div class="flex justify-between items-start">

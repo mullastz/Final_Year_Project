@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { RegisteredSystem } from '../../interface/registered-system';
 
 @Injectable({
@@ -14,4 +14,11 @@ export class SystemService {
   getRegisteredSystems(): Observable<RegisteredSystem[]> {
     return this.http.get<RegisteredSystem[]>(this.apiUrl);
   }
+
+  getSystemById(id: string): Observable<RegisteredSystem> {
+    return this.http.get<RegisteredSystem[]>(this.apiUrl).pipe(
+      map((systems: any[]) => systems.find((RegisteredSystem: { id: string; }) => RegisteredSystem.id === id)!)
+    );
+  }
+  
 }

@@ -1,0 +1,85 @@
+{
+    "data-record":[
+        {
+          "batchId": "#R001",
+          "description": "Year 2 Semester 1 Final Results",
+          "total": 10000,
+          "date": "2025-04-04",
+          "time": "11:15AM",
+          "ledgerHash": "0xA9B1...D76F"
+        },
+        {
+          "batchId": "#R002",
+          "description": "Year 2 Semester 2 Final Results",
+          "total": 9500,
+          "date": "2025-04-05",
+          "time": "10:00AM",
+          "ledgerHash": "0xB1C2...A76E"
+        },
+        {
+          "batchId": "#R003",
+          "description": "First Year Midterm Results",
+          "total": 8700,
+          "date": "2025-03-10",
+          "time": "02:30PM",
+          "ledgerHash": "0xC3D4...E98B"
+        },
+        {
+          "batchId": "#R004",
+          "description": "First Year Final Results",
+          "total": 9100,
+          "date": "2025-02-25",
+          "time": "09:45AM",
+          "ledgerHash": "0xD4E5...B76D"
+        },
+        {
+          "batchId": "#R005",
+          "description": "Graduate Research Data Batch 1",
+          "total": 3200,
+          "date": "2025-01-15",
+          "time": "11:00AM",
+          "ledgerHash": "0xE5F6...C67A"
+        },
+        {
+          "batchId": "#R006",
+          "description": "Graduate Research Data Batch 2",
+          "total": 3400,
+          "date": "2025-01-22",
+          "time": "12:00PM",
+          "ledgerHash": "0xF6G7...D34B"
+        },
+        {
+          "batchId": "#R007",
+          "description": "PhD Defense Records",
+          "total": 500,
+          "date": "2025-01-30",
+          "time": "01:15PM",
+          "ledgerHash": "0x07H8...E90C"
+        },
+        {
+          "batchId": "#R008",
+          "description": "2024 Alumni Data Export",
+          "total": 4500,
+          "date": "2025-01-05",
+          "time": "04:00PM",
+          "ledgerHash": "0x18I9...F01D"
+        },
+        {
+          "batchId": "#R009",
+          "description": "Scholarship Recipients List",
+          "total": 1200,
+          "date": "2025-02-01",
+          "time": "10:30AM",
+          "ledgerHash": "0x29J0...A23E"
+        },
+        {
+          "batchId": "#R010",
+          "description": "Academic Probation List - Spring 2025",
+          "total": 300,
+          "date": "2025-03-20",
+          "time": "08:20AM",
+          "ledgerHash": "0x3AK1...B45F"
+        }
+      ]
+      
+}

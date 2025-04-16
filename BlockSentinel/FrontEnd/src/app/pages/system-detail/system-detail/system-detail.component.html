@@ -1,0 +1,191 @@
+
+<div class="text-white p-6 max-w-6xl mx-auto px-4">
+    <!-- Header -->
+    <div class="flex items-center mb-6">
+      <img [src]="system.logoUrl" class="w-16 h-16 rounded-full mr-4" />
+      <h2 class="text-2xl font-bold">{{ system.name }}</h2>
+    </div>
+  
+    <!-- Details Card -->
+    <h3 class="text-xl font-semibold mb-4">System Details</h3>
+    <div class="bg-[#011F2F] p-6 rounded-lg shadow-md w-full">
+     
+      
+      <div class="grid grid-cols-2 gap-6 text-sm">
+        <div><strong>System ID:</strong> <span class="text-[#0E8CCF]">#{{ system.id }}</span></div>
+        <div><strong>System URL:</strong> <span class="text-[#0E8CCF]">{{ system.url }}</span></div>
+        <div><strong>System Type:</strong> {{ system.type }}</div>
+        <div class="flex items-center">
+          <strong>System Health Status:</strong>
+          <span class="ml-2 w-2.5 h-2.5 rounded-full inline-block" [ngClass]="system.health === 'Good' ? 'bg-[#29FB05]' : 'bg-[#FB0505]'"></span>
+          <span class="ml-1">{{ system.health }}</span>
+        </div>
+        <div>
+          <strong>Admin{{ system.admins.length > 1 ? 's' : '' }}:</strong>
+          <div *ngFor="let admin of system.admins; let i = index">
+            {{ system.admins.length > 1 ? 'Admin' + (i+1) + ': ' : '' }} {{ admin.name }} ({{ admin.email }})
+          </div>
+        </div>
+        <div class="flex items-center">
+          <strong>Status:</strong>
+          <span class="ml-2 w-2.5 h-2.5 rounded-full inline-block" [ngClass]="system.status === 'active' ? 'bg-[#29FB05]' : 'bg-[#FB0505]'"></span>
+          <span class="ml-1 capitalize">{{ system.status }}</span>
+        </div>
+        <div><strong>Data Type Protected:</strong> {{ system.dataType }}</div>
+        <div><strong>Alerts:</strong> {{ system.alert }}</div>
+      </div>
+  
+      <!-- Action Buttons -->
+      <div class="flex justify-end space-x-4 mt-6">
+        <button class="bg-[#00121C] px-4 py-2 rounded hover:bg-[#0A6A9F]">Sync</button>
+        <button class="bg-[#00121C] px-4 py-2 rounded hover:bg-[#0A6A9F]">Scan</button>
+        <button class="bg-[#00121C] px-4 py-2 rounded hover:bg-red-700">Remove</button>
+      </div>
+    </div>
+
+     <!-- Section 3: Alert Notification -->
+<div class="mt-8">
+    <h3 class="text-lg font-semibold text-white mb-4">Alert Notification</h3>
+  
+    <div class="bg-[#011F2F] p-4 rounded-lg shadow-md w-full">
+      <!-- Dropdown Buttons -->
+      <div class="flex justify-end mb-4 space-x-4">
+        <!-- Download Button -->
+        <div class="relative">
+          <button (click)="toggleDownloadDropdown()" class="bg-[#00121C] px-4 py-2 rounded-md text-white flex items-center space-x-2">
+            <i class="fas fa-download"></i>
+            <span>Download</span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <div *ngIf="showDownloadDropdown" class="absolute bg-[#011F2F] mt-2 rounded-md w-40 shadow-lg text-white text-sm z-10">
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">PDF</a>
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">Excel</a>
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">CSV</a>
+          </div>
+        </div>
+  
+        <!-- Filter Button -->
+        <div class="relative">
+          <button (click)="toggleFilterDropdown()" class="bg-[#00121C] px-4 py-2 rounded-md text-white flex items-center space-x-2">
+            <i class="fas fa-filter"></i>
+            <span>Filter</span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <div *ngIf="showFilterDropdown" class="absolute bg-[#011F2F] mt-2 rounded-md w-40 shadow-lg text-white text-sm z-10">
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">Today</a>
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">This Week</a>
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">This Month</a>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Alert Table -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="bg-[#00121C] text-white text-left">
+            <tr>
+              <th class="py-3 px-4">Severity</th>
+              <th class="py-3 px-4">Alert Message</th>
+              <th class="py-3 px-4">Date & Time</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="text-white">
+            <tr *ngFor="let alert of alertNotifications" class="border-b border-gray-700">
+              <td class="py-2 px-4 flex items-center space-x-2">
+                <span 
+                  class="w-3 h-3 rounded-full inline-block"
+                  [ngClass]="{
+                    'bg-[#FB0505]': alert.severity === 'Critical',
+                    'bg-[#FCAF08]': alert.severity === 'Warning',
+                    'bg-[#0E8CCF]': alert.severity === 'Info'
+                  }"
+                ></span>
+                <span>{{ alert.severity }}</span>
+              </td>
+              <td class="py-2 px-4">{{ alert.message }}</td>
+              <td class="py-2 px-4">{{ alert.date }} , {{ alert.time }}</td>
+              <td class="py-2 px-4">{{ alert.status }}</td>
+              <td class="py-2 px-4">
+                <button class="bg-[#00121C] px-3 py-1 rounded text-white text-xs hover:bg-[#0E8CCF]">View More</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4: Data Record -->
+<div class="mt-8">
+    <h3 class="text-lg font-semibold text-white mb-4">Data Record</h3>
+  
+    <div class="bg-[#011F2F] p-4 rounded-lg shadow-md w-full">
+      <!-- Dropdown Buttons -->
+      <div class="flex justify-end mb-4 space-x-4">
+        <!-- Download Button -->
+        <div class="relative">
+          <button (click)="toggleDownloadDropdown()" class="bg-[#00121C] px-4 py-2 rounded-md text-white flex items-center space-x-2">
+            <i class="fas fa-download"></i>
+            <span>Download</span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <div *ngIf="showDownloadDropdown" class="absolute bg-[#011F2F] mt-2 rounded-md w-40 shadow-lg text-white text-sm z-10">
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">PDF</a>
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">Excel</a>
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">CSV</a>
+          </div>
+        </div>
+  
+        <!-- Filter Button -->
+        <div class="relative">
+          <button (click)="toggleFilterDropdown()" class="bg-[#00121C] px-4 py-2 rounded-md text-white flex items-center space-x-2">
+            <i class="fas fa-filter"></i>
+            <span>Filter</span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <div *ngIf="showFilterDropdown" class="absolute bg-[#011F2F] mt-2 rounded-md w-40 shadow-lg text-white text-sm z-10">
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">Today</a>
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">This Week</a>
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">This Month</a>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Table -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="bg-[#00121C] text-white text-left">
+            <tr>
+              <th class="py-3 px-4">Batch ID</th>
+              <th class="py-3 px-4">Description</th>
+              <th class="py-3 px-4">Total</th>
+              <th class="py-3 px-4">Date</th>
+              <th class="py-3 px-4">Time</th>
+              <th class="py-3 px-4">Ledger Hash</th>
+              <th class="py-3 px-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="text-white">
+            <tr *ngFor="let record of dataRecords" class="border-b border-gray-700">
+              <td class="py-2 px-4">{{ record.batchId }}</td>
+              <td class="py-2 px-4">{{ record.description }}</td>
+              <td class="py-2 px-4">{{ record.total }}</td>
+              <td class="py-2 px-4">{{ record.date }}</td>
+              <td class="py-2 px-4">{{ record.time }}</td>
+              <td class="py-2 px-4">{{ record.ledgerHash }}</td>
+              <td class="py-2 px-4">
+                <button class="bg-[#00121C] px-3 py-1 rounded text-white text-xs hover:bg-[#0E8CCF]">View Ledger</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  
+
+  </div>
+ 
