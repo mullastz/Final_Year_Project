@@ -20,31 +20,80 @@
 
       <!-- Menu Items -->
       <nav class="space-y-2">
-        <a routerLink="/dashboard/overview" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#0E8CCF] hover:rounded-xl transition-all">
+        <a
+          routerLink="/dashboard/overview"
+          [ngClass]="{
+            'bg-[#0E8CCF] rounded-xl': currentRoute === '/dashboard/overview',
+            'hover:bg-[#0E8CCF] hover:rounded-xl': true
+          }"
+          class="flex items-center gap-2 px-3 py-2 transition-all"
+        >
           <i class="fas fa-tachometer-alt"></i>
           <span [ngClass]="{ 'hidden': isCollapsed }">Dashboard</span>
         </a>
-        <a routerLink="/dashboard-pages/registration" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#0E8CCF] hover:rounded-xl transition-all">
+        <a
+          routerLink="/dashboard-pages/registration"
+          [ngClass]="{
+            'bg-[#0E8CCF] rounded-xl': currentRoute === '/dashboard-pages/registration',
+            'hover:bg-[#0E8CCF] hover:rounded-xl': true
+          }"
+          class="flex items-center gap-2 px-3 py-2 transition-all"
+        >
           <i class="fas fa-user-plus"></i>
           <span [ngClass]="{ 'hidden': isCollapsed }">Registration</span>
         </a>
-        <a routerLink="/dashboard-pages/management" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#0E8CCF] hover:rounded-xl transition-all">
+        <a
+          routerLink="/dashboard-pages/management"
+          [ngClass]="{
+            'bg-[#0E8CCF] rounded-xl': currentRoute === '/dashboard-pages/management',
+            'hover:bg-[#0E8CCF] hover:rounded-xl': true
+          }"
+          class="flex items-center gap-2 px-3 py-2 transition-all"
+        >
           <i class="fas fa-cogs"></i>
           <span [ngClass]="{ 'hidden': isCollapsed }">Management</span>
         </a>
-        <a routerLink="/dashboard-pages/logs" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#0E8CCF] hover:rounded-xl transition-all">
+        <a
+          routerLink="/dashboard-pages/logs"
+          [ngClass]="{
+            'bg-[#0E8CCF] rounded-xl': currentRoute === '/dashboard-pages/logs',
+            'hover:bg-[#0E8CCF] hover:rounded-xl': true
+          }"
+          class="flex items-center gap-2 px-3 py-2 transition-all"
+        >
           <i class="fas fa-file-alt"></i>
           <span [ngClass]="{ 'hidden': isCollapsed }">Logs</span>
         </a>
-        <a routerLink="/dashboard-pages/sync-status" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#0E8CCF] hover:rounded-xl transition-all">
+        <a
+          routerLink="/dashboard-pages/sync-status"
+          [ngClass]="{
+            'bg-[#0E8CCF] rounded-xl': currentRoute === '/dashboard-pages/sync-status',
+            'hover:bg-[#0E8CCF] hover:rounded-xl': true
+          }"
+          class="flex items-center gap-2 px-3 py-2 transition-all"
+        >
           <i class="fas fa-sync-alt"></i>
           <span [ngClass]="{ 'hidden': isCollapsed }">Sync Status</span>
         </a>
-        <a routerLink="/dashboard-pages/settings" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#0E8CCF] hover:rounded-xl transition-all">
+        <a
+          routerLink="/dashboard-pages/settings"
+          [ngClass]="{
+            'bg-[#0E8CCF] rounded-xl': currentRoute === '/dashboard-pages/settings',
+            'hover:bg-[#0E8CCF] hover:rounded-xl': true
+          }"
+          class="flex items-center gap-2 px-3 py-2 transition-all"
+        >
           <i class="fas fa-sliders-h"></i>
           <span [ngClass]="{ 'hidden': isCollapsed }">Settings</span>
         </a>
-        <a routerLink="/dashboard-pages/health" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#0E8CCF] hover:rounded-xl transition-all">
+        <a
+          routerLink="/dashboard-pages/health"
+          [ngClass]="{
+            'bg-[#0E8CCF] rounded-xl': currentRoute === '/dashboard-pages/health',
+            'hover:bg-[#0E8CCF] hover:rounded-xl': true
+          }"
+          class="flex items-center gap-2 px-3 py-2 transition-all"
+        >
           <i class="fas fa-heartbeat"></i>
           <span [ngClass]="{ 'hidden': isCollapsed }">Health</span>
         </a>

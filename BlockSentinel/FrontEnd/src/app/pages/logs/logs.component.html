@@ -1,1 +1,92 @@
-<p>logs works!</p>
+<div class="text-white p-6 max-w-6xl mx-auto">
+    <h2 class="text-2xl font-bold mb-6">Systems Logs</h2>
+  
+    <!-- Flex Container: Table Card + Detail Card -->
+    <div class="flex transition-all duration-300 space-x-6">
+  
+      <!-- Logs Table Card -->
+      <div
+        class="bg-[#011F2F] p-6 rounded-lg shadow-md flex-1 transition-all duration-300"
+        [ngClass]="{ 'max-w-[calc(100%-420px)]': selectedLog }">
+        
+        <!-- Download Button -->
+        <div class="flex justify-end mb-4">
+          <div class="relative">
+            <button (click)="toggleDownloadDropdown()" class="bg-[#00121C] px-4 py-2 rounded-md text-white flex items-center space-x-2">
+              <i class="fas fa-download"></i>
+              <span>Download</span>
+              <i class="fas fa-caret-down"></i>
+            </button>
+            <div *ngIf="showDownloadDropdown" class="absolute bg-[#011F2F] mt-2 rounded-md w-40 shadow-lg text-white text-sm z-10">
+              <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">PDF</a>
+              <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">Excel</a>
+              <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">CSV</a>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Logs Table -->
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead class="bg-[#00121C] text-white text-left">
+              <tr>
+                <th class="py-3 px-4">Timestamp</th>
+                <th class="py-3 px-4">Actor</th>
+                <th class="py-3 px-4">Action Type</th>
+                <th class="py-3 px-4">System</th>
+                <th class="py-3 px-4">Description</th>
+                <th class="py-3 px-4">Status</th>
+                <th class="py-3 px-4">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let log of logs" class="border-b border-gray-700">
+                <td class="py-2 px-4">{{ log.timestamp }}</td>
+                <td class="py-2 px-4">{{ log.actor }}</td>
+                <td class="py-2 px-4">{{ log.actionType }}</td>
+                <td class="py-2 px-4">{{ log.system }}</td>
+                <td class="py-2 px-4">{{ log.description }}</td>
+                <td class="py-2 px-4 flex items-center">
+                  <span class="w-2.5 h-2.5 rounded-full inline-block mr-2"
+                    [ngClass]="{
+                      'bg-[#29FB05]': log.status === 'Success',
+                      'bg-[#FB0505]': log.status === 'Alert',
+                      'bg-[#7B7272]': log.status === 'Viewed'
+                    }"></span>
+                  {{ log.status }}
+                </td>
+                <td class="py-2 px-4">
+                  <button (click)="viewLogDetail(log)" class="bg-[#00121C] px-3 py-1 rounded text-white text-xs hover:bg-[#0E8CCF]">View More</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  
+      <!-- Slide-In Detail Card (if selected) -->
+      <div *ngIf="selectedLog" class="w-[400px] bg-[#011F2F] rounded-lg shadow-lg p-6 self-start">
+        <h3 class="text-lg font-semibold mb-4">
+          Log - {{ selectedLog.batchId }} ({{ selectedLog.description }})
+        </h3>
+        <div class="space-y-2 text-sm">
+          <p><strong>Date & Time:</strong>&nbsp;&nbsp;&nbsp;{{ selectedLog.timestamp }}</p>
+          <p><strong>System:</strong>&nbsp;&nbsp;&nbsp;{{ selectedLog.system }}</p>
+          <p><strong>System ID:</strong>&nbsp;&nbsp;&nbsp;{{ selectedLog.systemId }}</p>
+          <p><strong>Batch ID:</strong>&nbsp;&nbsp;&nbsp;{{ selectedLog.batchId }}</p>
+          <p><strong>Actor:</strong>&nbsp;&nbsp;&nbsp;{{ selectedLog.actor }}</p>
+          <p><strong>Action Type:</strong>&nbsp;&nbsp;&nbsp;{{ selectedLog.actionType }}</p>
+          <p><strong>Status:</strong>&nbsp;&nbsp;&nbsp;{{ selectedLog.status }}</p>
+          <p><strong>Description:</strong>&nbsp;&nbsp;&nbsp;{{ selectedLog.description }}</p>
+          <p><strong>Ledger Hash:</strong>&nbsp;&nbsp;&nbsp;{{ selectedLog.ledgerHash }}</p>
+          <p><strong>Related Data:</strong>&nbsp;&nbsp;&nbsp;<span class="text-[#0E8CCF] underline cursor-pointer">{{ selectedLog.relatedData }}</span></p>
+          <p><strong>Linked Alert:</strong>&nbsp;&nbsp;&nbsp;{{ selectedLog.linkedAlert || 'None' }}</p>
+        </div>
+        <button (click)="closeLogDetail()" class="mt-6 bg-[#00121C] px-4 py-2 rounded hover:bg-[#0E8CCF] text-sm">
+          Close
+        </button>
+      </div>
+  
+    </div>
+  </div>
+  

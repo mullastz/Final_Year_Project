@@ -14,6 +14,7 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { HealthComponent } from './pages/health/health.component';
 import { SyncStatusComponent } from './pages/sync-status/sync-status.component';
 import { SystemDetailComponent } from './pages/system-detail/system-detail/system-detail.component';
+import { LedgerDetailComponent } from './pages/ledger-detail/ledger-detail.component';
 
 export const routes: Routes = [
 
@@ -50,7 +51,8 @@ export const routes: Routes = [
         { path: 'settings', component: SettingsComponent },
         { path: 'health', component: HealthComponent },
         { path: 'sync-status', component: SyncStatusComponent },
-        { path: 'system-detail/:id', component: SystemDetailComponent }
+        { path: 'system-detail/:id', component: SystemDetailComponent },
+        { path: 'ledger-detail/:systemId/:batchId', component: LedgerDetailComponent },
 
       ]
     },

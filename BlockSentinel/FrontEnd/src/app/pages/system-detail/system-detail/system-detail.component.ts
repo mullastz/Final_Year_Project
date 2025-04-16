@@ -10,6 +10,7 @@ import { Alert } from '../../../interface/alert';
 import { AlertService } from '../../../services/alert/alert.service';
 import { DataRecord } from '../../../interface/data-record';
 import { DataRecordService } from '../../../services/data-record/data-record.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-system-detail',
@@ -34,7 +35,12 @@ export class SystemDetailComponent implements OnInit {
     this.showFilterDropdown = !this.showFilterDropdown;
   }
 
+  goToLedgerDetail(systemId: string, batchId: string) {
+    this.router.navigate(['/dashboard-pages/ledger-detail', systemId, batchId]);
+  }
+  
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private systemService: SystemService,
     private alertService: AlertService,
@@ -47,13 +53,13 @@ export class SystemDetailComponent implements OnInit {
       this.system = data;
     });
 
-    // 💡 This should update the `alertNotifications` array instead of overwriting the service.
-    this.alertService.getAlerts().subscribe((data: Alert[]) => {
-      this.alertNotifications = data;
+    this.alertService.getAlerts().subscribe((alerts: Alert[]) => {
+      this.alertNotifications = alerts.filter(alert => alert.systemId === id);
     });
 
-    this.dataRecordService.getDataRecords().subscribe(data => {
-       this.dataRecords = data;
-      });
+    this.dataRecordService.getDataRecords().subscribe((records: DataRecord[]) => {
+      this.dataRecords = records.filter(record => record.systemId === id);
+    });
+
   }
 }

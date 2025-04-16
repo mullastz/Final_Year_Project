@@ -1,0 +1,40 @@
+<div class="text-white p-6">
+    <h2 class="text-2xl font-bold mb-4">
+      Ledger – Batch: {{ ledger.batchId }} ({{ ledger.description }})
+    </h2>
+  
+    <div class="bg-[#011F2F] p-4 rounded-lg shadow-md">
+      <!-- Download Button -->
+      <div class="flex justify-end mb-4">
+        <div class="relative">
+          <button (click)="toggleDownloadDropdown()" class="bg-[#00121C] px-4 py-2 rounded-md text-white flex items-center space-x-2">
+            <i class="fas fa-download"></i>
+            <span>Download</span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <div *ngIf="showDownloadDropdown" class="absolute bg-[#011F2F] mt-2 rounded-md w-40 shadow-lg text-white text-sm z-10">
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">PDF</a>
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">Excel</a>
+            <a class="block px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer">CSV</a>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Dynamic Table -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="bg-[#00121C] text-white text-left">
+            <tr>
+              <th *ngFor="let column of ledger?.columns" class="py-3 px-4">{{ column }}</th>
+            </tr>
+          </thead>
+          <tbody class="text-white">
+            <tr *ngFor="let row of ledger?.data" class="border-b border-gray-700">
+              <td *ngFor="let column of ledger.columns" class="py-2 px-4">{{ row[column] }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  

@@ -44,7 +44,7 @@
     </div>
 
      <!-- Section 3: Alert Notification -->
-<div class="mt-8">
+<div *ngIf="alertNotifications.length > 0" class="mt-8">
     <h3 class="text-lg font-semibold text-white mb-4">Alert Notification</h3>
   
     <div class="bg-[#011F2F] p-4 rounded-lg shadow-md w-full">
@@ -118,7 +118,7 @@
   </div>
 
   <!-- Section 4: Data Record -->
-<div class="mt-8">
+<div *ngIf="dataRecords.length > 0"  class="mt-8">
     <h3 class="text-lg font-semibold text-white mb-4">Data Record</h3>
   
     <div class="bg-[#011F2F] p-4 rounded-lg shadow-md w-full">
@@ -176,7 +176,7 @@
               <td class="py-2 px-4">{{ record.time }}</td>
               <td class="py-2 px-4">{{ record.ledgerHash }}</td>
               <td class="py-2 px-4">
-                <button class="bg-[#00121C] px-3 py-1 rounded text-white text-xs hover:bg-[#0E8CCF]">View Ledger</button>
+                <button  (click)="goToLedgerDetail(system.id, record.batchId)"   class="bg-[#00121C] px-3 py-1 rounded text-white text-xs hover:bg-[#0E8CCF]">View Ledger</button>
               </td>
             </tr>
           </tbody>

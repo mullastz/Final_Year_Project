@@ -1,1 +1,42 @@
-<p>sync-status works!</p>
+<div class="text-white p-6 max-w-6xl mx-auto">
+    <h2 class="text-2xl font-bold mb-6">Sync Summary</h2>
+  
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Syncs Today -->
+      <div class="bg-[#011F2F] p-4 rounded-lg shadow-md">
+        <div class="flex items-center space-x-3 mb-2">
+          <i class="fas fa-calendar-check text-[#0E8CCF]"></i>
+          <h3 class="font-semibold">Syncs Today</h3>
+        </div>
+        <p class="text-3xl font-bold">{{ syncSummary.syncsToday }}</p>
+      </div>
+  
+      <!-- Pending Syncs -->
+      <div class="bg-[#011F2F] p-4 rounded-lg shadow-md">
+        <div class="flex items-center space-x-3 mb-2">
+          <i class="fas fa-clock text-[#FCAF08]"></i>
+          <h3 class="font-semibold">Pending Syncs</h3>
+        </div>
+        <p class="text-3xl font-bold">{{ syncSummary.pendingSyncs }}</p>
+      </div>
+  
+      <!-- Successful -->
+      <div class="bg-[#011F2F] p-4 rounded-lg shadow-md">
+        <div class="flex items-center space-x-3 mb-2">
+          <span class="w-3 h-3 rounded-full bg-[#29FB05] inline-block"></span>
+          <h3 class="font-semibold">Successful</h3>
+        </div>
+        <p class="text-3xl font-bold">{{ syncSummary.successful }}</p>
+      </div>
+  
+      <!-- Failed -->
+      <div class="bg-[#011F2F] p-4 rounded-lg shadow-md">
+        <div class="flex items-center space-x-3 mb-2">
+          <span class="w-3 h-3 rounded-full bg-[#FB0505] inline-block"></span>
+          <h3 class="font-semibold">Failed</h3>
+        </div>
+        <p class="text-3xl font-bold">{{ syncSummary.failed }}</p>
+      </div>
+    </div>
+  </div>
+  
