@@ -15,6 +15,10 @@ import { HealthComponent } from './pages/health/health.component';
 import { SyncStatusComponent } from './pages/sync-status/sync-status.component';
 import { SystemDetailComponent } from './pages/system-detail/system-detail/system-detail.component';
 import { LedgerDetailComponent } from './pages/ledger-detail/ledger-detail.component';
+import { AdminProfileComponent } from './pages/settings/admin-profile/admin-profile/admin-profile.component';
+import { SystemSyncComponent } from './pages/settings/system-sync-configuration/system-sync/system-sync.component';  
+import { DataBackupComponent } from './pages/settings/data-export-backup-&-logs/data-backup/data-backup.component';
+import { AdvancedConfigurationComponent } from './pages/settings/advanced-configuration/advanced-configuration/advanced-configuration.component';
 
 export const routes: Routes = [
 
@@ -48,7 +52,15 @@ export const routes: Routes = [
         { path: 'registration', component: RegistrationComponent },
         { path: 'management', component: ManagementComponent },
         { path: 'logs', component: LogsComponent },
-        { path: 'settings', component: SettingsComponent },
+        { path: 'settings', component: SettingsComponent,
+          children: [
+            { path: 'admin-profile', component: AdminProfileComponent },
+            { path: 'system-sync', component: SystemSyncComponent },
+            { path: 'data-backup', component: DataBackupComponent },
+            { path: 'advanced-config', component: AdvancedConfigurationComponent },
+            { path: '', redirectTo: 'admin-profile', pathMatch: 'full' }
+          ]
+         },
         { path: 'health', component: HealthComponent },
         { path: 'sync-status', component: SyncStatusComponent },
         { path: 'system-detail/:id', component: SystemDetailComponent },

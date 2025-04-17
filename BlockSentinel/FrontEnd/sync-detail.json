@@ -1,0 +1,115 @@
+{
+    "sync-detail": [
+      {
+        "id": 1,
+        "dateTime": "2025-04-05 13:10",
+        "system": "University Results",
+        "recordsSynced": 1000,
+        "status": "Success",
+        "ledgerHash": "0x9c...2a",
+        "syncedBy": "Admin",
+        "affectedTables": "results_2025",
+        "notes": "Synchronized successfully"
+      },
+      {
+        "id": 2,
+        "dateTime": "2025-04-05 10:45",
+        "system": "Course Enrollment",
+        "recordsSynced": 500,
+        "status": "Failed",
+        "ledgerHash": "-",
+        "syncedBy": "System",
+        "affectedTables": "enrollments",
+        "notes": "Connection timeout"
+      },
+        {
+            "id": 3,
+            "dateTime": "2025-04-05 09:30",
+            "system": "Student Information",
+            "recordsSynced": 2000,
+            "status": "Success",
+            "ledgerHash": "0x7f...1b",
+            "syncedBy": "Admin",
+            "affectedTables": "students_2025",
+            "notes": "Synchronized successfully"
+        },
+        {
+            "id": 4,
+            "dateTime": "2025-04-05 08:15",
+            "system": "Course Catalog",
+            "recordsSynced": 300,
+            "status": "Success",
+            "ledgerHash": "-",
+            "syncedBy": "System",
+            "affectedTables": "-",
+            "notes": "-"
+        },
+        {
+            "id": 5,
+            "dateTime": "2025-04-05 07:00",
+            "system": "Library System",
+            "recordsSynced": 1500,
+            "status": "Success",
+            "ledgerHash": "0x3a...4c",
+            "syncedBy": "Admin",
+            "affectedTables": "library_2025",
+            "notes": "Synchronized successfully"
+        },
+        {
+            "id": 6,
+            "dateTime": "2025-04-05 06:45",
+            "system": "Financial Aid",
+            "recordsSynced": 800,
+            "status": "Failed",
+            "ledgerHash": "-",
+            "syncedBy": "-",
+            "affectedTables": "-",
+            "notes": "-"
+        },
+        {
+            "id": 7,
+            "dateTime": "2025-04-05 05:30",
+            "system": "Campus Security",
+            "recordsSynced": 1200,
+            "status": "Success",
+            "ledgerHash": "0x8b...3d",
+            "syncedBy": "Admin",
+            "affectedTables": "security_2025",
+            "notes": "Synchronized successfully"
+        },
+        {
+            "id": 8,
+            "dateTime": "2025-04-05 04:15",
+            "system": "Housing Management",
+            "recordsSynced": 600,
+            "status": "Success",
+            "ledgerHash": "-",
+            "syncedBy": "-",
+            "affectedTables": "-",
+            "notes": "-"
+        },
+        {
+            "id": 9,
+            "dateTime": "2025-04-05 03:00",
+            "system": "Health Services",
+            "recordsSynced": 400,
+            "status": "Success",
+            "ledgerHash": "0x2c...5e",
+            "syncedBy": "System",
+            "affectedTables": "health_2025",
+            "notes": "Synchronized successfully"
+        },
+        {
+            "id": 10,
+            "dateTime": "2025-04-05 01:45",
+            "system": "Event Management",
+            "recordsSynced": 700,
+            "status": "Failed",
+            "ledgerHash": "-",
+            "syncedBy": "-",
+            "affectedTables": "-",
+            "notes": "-"
+        }
+    ]
+  }
+  

@@ -1,1 +1,25 @@
-<p>settings works!</p>
+<div class="flex h-screen overflow-y-auto bg-[#011F2F]">
+  <!-- Left Side Menu -->
+  <div class="w-64 p-4 text-white">
+    <div
+      *ngFor="let item of menuItems"
+      (click)="navigate(item.route)"
+      [ngClass]="{
+        'bg-[#0E8CCF]': currentRoute.includes(item.route),
+        'hover:bg-[#0E8CCF]': !currentRoute.includes(item.route)
+      }"
+      
+      class="px-4 py-3 mb-2 rounded cursor-pointer transition-all duration-200"
+    >
+      {{ item.label }}
+    </div>
+  </div>
+
+  <!-- Vertical Divider -->
+  <div class="w-px bg-[#2E3B4E] mx-2"></div>
+
+  <!-- Right Side Content -->
+  <div class="flex-grow p-6 text-white">
+    <router-outlet></router-outlet>
+  </div>
+</div>
