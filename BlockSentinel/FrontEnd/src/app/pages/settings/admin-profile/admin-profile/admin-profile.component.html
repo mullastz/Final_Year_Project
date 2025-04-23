@@ -1,1 +1,449 @@
-<p>admin-profile works!</p>
+<div class="p-6 text-white space-y-6 -mt-9 ">
+    <!-- Main Heading -->
+    <h1 class="text-2xl font-bold">Admin Profile</h1>
+  
+    <!-- Section: Personal Information -->
+    <div>
+      <h6 class="text-lg font-medium mb-4">Personal Information</h6>
+  
+      <!-- Info Card -->
+      <div class="bg-[#00121C] shadow-lg rounded-lg p-6 flex justify-between items-center">
+        <!-- Left Side: Profile Info -->
+        <div class="flex items-center space-x-6">
+          <!-- Profile Image -->
+          <div class="w-24 h-24 rounded-full bg-[#0E8CCF] overflow-hidden border-4 border-[#00121C]">
+            <img *ngIf="admin.photo" [src]="admin.photo" alt="Profile" class="w-full h-full object-cover" />
+            <div *ngIf="!admin.photo" class="w-full h-full flex items-center justify-center text-3xl text-white">
+              <i class="fas fa-camera"></i>
+            </div>
+          </div>
+  
+          <!-- Name and Role -->
+          <div>
+            <h3 class="text-xl font-bold">{{ admin.name }}</h3>
+            <p class="text-gray-400 mt-1">Block Sentinel Admin</p> <!-- mt-1 adds spacing -->
+          </div>
+        </div>
+  
+        <!-- Right Side: Edit Button -->
+        <button
+          (click)="openEditModal()"
+          class="bg-[#011F2F] px-4 py-2 rounded text-white flex items-center space-x-2 hover:bg-[#0E8CCF] transition"
+        >
+          <i class="fas fa-edit"></i>
+          <span>Edit</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Edit Modal -->
+  <div
+    *ngIf="showEditModal"
+    class="fixed inset-0 bg-[#00000090] backdrop-blur-sm flex items-center justify-center z-50"
+  >
+    <div class="bg-[#011F2F] p-6 md:p-8 rounded-lg w-[90%] md:w-[600px] relative space-y-6">
+      <h2 class="text-center text-xl font-bold">Change Personal Information</h2>
+  
+      <div class="flex flex-col md:flex-row gap-6">
+        <!-- Form Inputs -->
+        <div class="flex-1 space-y-4">
+          <div>
+            <label class="block mb-1 font-medium">Admin Name</label>
+            <div class="flex items-center bg-[#00121C] rounded px-3 w-full md:w-[250px]">
+              <i class="fas fa-user text-white mr-2"></i>
+              <input
+                [(ngModel)]="editForm.name"
+                type="text"
+                class="bg-transparent text-white py-2 outline-none w-full"
+                placeholder="Enter name"
+              />
+            </div>
+          </div>
+  
+          <div>
+            <label class="block mb-1 font-medium">Email</label>
+            <div class="flex items-center bg-[#00121C] rounded px-3 w-full md:w-[250px]">
+              <i class="fas fa-envelope text-white mr-2"></i>
+              <input
+                [(ngModel)]="editForm.email"
+                type="email"
+                class="bg-transparent text-white py-2 outline-none w-full"
+                placeholder="Enter email"
+              />
+            </div>
+          </div>
+        </div>
+  
+        <!-- Profile Image Upload -->
+        <div class="flex flex-col items-center justify-center space-y-2">
+          <div
+            class="w-28 h-28 rounded-full bg-[#0E8CCF] flex items-center justify-center overflow-hidden cursor-pointer relative"
+            (click)="triggerFileInput()"
+          >
+            <img *ngIf="editForm.photo" [src]="editForm.photo" class="w-full h-full object-cover" />
+            <div *ngIf="!editForm.photo" class="text-3xl text-white">
+              <i class="fas fa-camera"></i>
+            </div>
+            <input type="file" hidden #fileInput (change)="handleImageUpload($event)" />
+          </div>
+          <label class="text-sm text-white">Profile Photo</label>
+        </div>
+      </div>
+  
+      <!-- Action Buttons -->
+      <div class="flex justify-between">
+        <button (click)="closeEditModal()" class="bg-[#00121C] px-4 py-2 rounded hover:bg-red-700 text-white">
+          Cancel
+        </button>
+        <button (click)="submitChanges()" class="bg-[#00121C] px-4 py-2 rounded hover:bg-green-600 text-white">
+          Change
+        </button>
+      </div>
+    </div>
+  </div>
+
+ <!-- Section: Security -->
+<div class="p-6 text-white space-y-6 -mt-9">
+    <h2 class="text-lg font-medium mb-4 mt-4">Security</h2>
+  
+    <!-- Security Card -->
+    <div class="bg-[#00121C] shadow-lg rounded-lg p-6 flex justify-between items-center">
+      <div>
+        <h3 class="text-md font-semibold mb-1">Password</h3>
+        <p class="text-gray-400 text-xl tracking-widest">••••••••</p>
+      </div>
+      <button
+        (click)="openPasswordModal()"
+        class="bg-[#011F2F] px-4 py-2 rounded text-white flex items-center space-x-2 hover:bg-[#0E8CCF] transition"
+      >
+        <i class="fas fa-edit"></i>
+        <span>Edit</span>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Change Password Modal -->
+  <div *ngIf="showPasswordModal"  class="fixed inset-0 flex items-center bg-[#00000090] backdrop-blur-sm  justify-center z-50">
+    <div class="bg-[#011F2F] p-6 rounded-lg w-full max-w-xl space-y-6 relative">
+      <h2 class="text-center text-xl font-bold text-white">Change Password</h2>
+  
+      <!-- Form Card -->
+      <div class="bg-[#00121C] rounded-lg shadow-lg divide-y divide-[#0E8CCF]">
+        <!-- Password Field Template -->
+        <div class="p-4">
+          <div class="relative">
+            <label
+              class="absolute left-3 top-2 text-white text-sm transition-all duration-200"
+              [class.text-blue-400]="passwordFocus === 'current' || passwordForm.current"
+              [class.text-xs]="passwordFocus === 'current' || passwordForm.current"
+              [class.-top-3]="passwordFocus === 'current' || passwordForm.current"
+            >
+              Current Password
+            </label>
+            <input
+              [(ngModel)]="passwordForm.current"
+              [type]="passwordVisible.current ? 'text' : 'password'"
+              (focus)="passwordFocus = 'current'"
+              (blur)="passwordFocus = ''"
+              class="w-full pt-6 pb-2 px-3 bg-transparent border-b border-[#0E8CCF] text-white outline-none"
+            />
+            <i
+              class="fas absolute right-3 top-1/2 -translate-y-1/2 text-white cursor-pointer"
+              [ngClass]="passwordVisible.current ? 'fa-eye-slash' : 'fa-eye'"
+              (click)="togglePasswordVisibility('current')"
+            ></i>
+          </div>
+        </div>
+  
+        <!-- New Password -->
+        <div class="p-4" [class.opacity-50]="!passwordForm.current">
+          <div class="relative">
+            <label
+              class="absolute left-3 top-2 text-white text-sm transition-all duration-200"
+              [class.text-blue-400]="passwordFocus === 'new' || passwordForm.new"
+              [class.text-xs]="passwordFocus === 'new' || passwordForm.new"
+              [class.-top-3]="passwordFocus === 'new' || passwordForm.new"
+            >
+              New Password
+            </label>
+            <input
+              [(ngModel)]="passwordForm.new"
+              [type]="passwordVisible.new ? 'text' : 'password'"
+              (input)="onNewPasswordChange()"
+              [disabled]="!passwordForm.current"
+              (focus)="passwordFocus = 'new'"
+              (blur)="passwordFocus = ''"
+              class="w-full pt-6 pb-2 px-3 bg-transparent border-b border-[#0E8CCF] text-white outline-none"
+            />
+            <i
+              class="fas absolute right-3 top-1/2 -translate-y-1/2 text-white cursor-pointer"
+              [ngClass]="passwordVisible.new ? 'fa-eye-slash' : 'fa-eye'"
+              (click)="togglePasswordVisibility('new')"
+            ></i>
+          </div>
+        </div>
+  
+        <!-- Confirm Password -->
+        <div class="p-4" [class.opacity-50]="!passwordForm.new">
+          <div class="relative">
+            <label
+              class="absolute left-3 top-2 text-white text-sm transition-all duration-200"
+              [class.text-blue-400]="passwordFocus === 'confirm' || passwordForm.confirm"
+              [class.text-xs]="passwordFocus === 'confirm' || passwordForm.confirm"
+              [class.-top-3]="passwordFocus === 'confirm' || passwordForm.confirm"
+            >
+              Confirm Password
+            </label>
+            <input
+              [(ngModel)]="passwordForm.confirm"
+              [type]="passwordVisible.confirm ? 'text' : 'password'"
+              [disabled]="!passwordForm.new"
+              (focus)="passwordFocus = 'confirm'"
+              (input)="onConfirmPasswordChange()"
+              (blur)="passwordFocus = ''"
+              class="w-full pt-6 pb-2 px-3 bg-transparent border-b border-[#0E8CCF] text-white outline-none"
+            />
+            
+            <i
+              class="fas absolute right-3 top-1/2 -translate-y-1/2 text-white cursor-pointer"
+              [ngClass]="passwordVisible.confirm ? 'fa-eye-slash' : 'fa-eye'"
+              (click)="togglePasswordVisibility('confirm')"
+            ></i>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Password Strength Meter -->
+      <div class="space-y-2">
+        <div class="h-2 rounded bg-gray-700 overflow-hidden">
+          <div
+            [ngStyle]="{
+              width: passwordStrength === 'weak' ? '25%' :
+                     passwordStrength === 'medium' ? '60%' :
+                     passwordStrength === 'strong' ? '100%' : '0%',
+              backgroundColor: passwordStrength === 'weak' ? '#FB0505' :
+                               passwordStrength === 'medium' ? '#FCAF08' :
+                               passwordStrength === 'strong' ? '#29FB05' : 'transparent'
+            }"
+            class="h-full transition-all"
+          ></div>
+        </div>
+        <p class="text-sm text-gray-300">
+          Password must contain uppercase, lowercase, number, special character, and be 8+ characters long.
+        </p>
+        <ul class="text-sm text-red-400 list-disc ml-6" *ngIf="passwordTips.length">
+          <li *ngFor="let tip of passwordTips">{{ tip }}</li>
+          <li *ngFor="let match of matchTips" [ngClass]="{
+            'text-green-500': match.includes('✔'),
+            'text-red-500': match.includes('✖')
+          }">
+            {{ match }}
+          </li>
+        </ul>
+        
+      </div>
+  
+      <!-- Action Buttons -->
+      <div class="flex justify-between pt-2">
+        <button (click)="closePasswordModal()" class="bg-[#00121C] px-4 py-2 rounded hover:bg-red-700 text-white">
+          Cancel
+        </button>
+        <button (click)="submitPasswordChange()" class="bg-[#00121C] px-4 py-2 rounded hover:bg-green-600 text-white">
+          Change
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <section class="p-6 text-white space-y-6 -mt-9">
+    <h2 class="ext-lg font-medium mb-4 mt-4">Manage Admin Role</h2>
+    <div class="bg-[#00121C] p-4 rounded-md overflow-x-auto">
+      <table class="w-full text-left text-sm text-white">
+        <thead class="bg-[#011F2F]">
+          <tr>
+            <th class="p-3">Name</th>
+            <th class="p-3">Email</th>
+            <th class="p-3">Role</th>
+            <th class="p-3">Status</th>
+            <th class="p-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let admin of admins">
+            <td class="p-3">{{ admin.name }}</td>
+            <td class="p-3">{{ admin.email }}</td>
+            <td class="p-3">{{ admin.role }}</td>
+            <td class="p-3 flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full inline-block"
+                [ngStyle]="{
+                  'background-color': admin.status === 'Active' ? '#29FB05' : '#FB0505'
+                }"></span>
+              {{ admin.status }}
+            </td>
+            <td class="p-3 relative">
+              <button (click)="toggleDropdown(admin.id)">
+                <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 6a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM10 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM10 16a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                </svg>
+              </button>
+              <ul
+                *ngIf="dropdownOpen === admin.id"
+                class="absolute right-0 mt-2 w-40 bg-[#011F2F] text-white rounded shadow z-10"
+              >
+                <li
+                  class="flex items-center gap-2 px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer"
+                  (click)="openAdminEditModal(admin)"
+                >
+                  <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      d="M17.414 2.586a2 2 0 010 2.828l-9.9 9.9-3.536.707.707-3.536 9.9-9.9a2 2 0 012.828 0z"
+                    />
+                  </svg>
+                  Edit
+                </li>
+                <li
+                  class="flex items-center gap-2 px-4 py-2 hover:bg-[#0E8CCF] cursor-pointer"
+                  (click)="deleteAdmin(admin.id)"
+                >
+                  <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      d="M6 8a1 1 0 011 1v6a1 1 0 102 0V9a1 1 0 112 0v6a1 1 0 102 0V9a1 1 0 112 0v6a1 1 0 102 0V9a1 1 0 011-1H6zm3-3V3a1 1 0 112 0v2h5a1 1 0 010 2H4a1 1 0 010-2h5z"
+                    />
+                  </svg>
+                  Remove
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Edit Admin Modal -->
+<div *ngIf="showAdminEditModal" class="fixed inset-0 bg-[#00000090] backdrop-blur-sm flex items-center justify-center z-50">
+  <div class="bg-[#011F2F] p-6 md:p-8 rounded-lg w-[90%] md:w-[600px] space-y-6 relative">
+    <h2 class="text-center text-xl font-bold text-white">Change Admin Detail</h2>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Name -->
+      <div>
+        <label class="block mb-1 font-medium text-white">Name</label>
+        <div class="flex items-center bg-[#00121C] rounded px-3">
+          <i class="fas fa-user text-white mr-2"></i>
+          <input [(ngModel)]="editAdminForm.name" type="text" class="bg-transparent text-white py-2 outline-none w-full" />
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="block mb-1 font-medium text-white">Email</label>
+        <div class="flex items-center bg-[#00121C] rounded px-3">
+          <i class="fas fa-envelope text-white mr-2"></i>
+          <input [(ngModel)]="editAdminForm.email" type="email" class="bg-transparent text-white py-2 outline-none w-full" />
+        </div>
+      </div>
+
+      <!-- Role Dropdown -->
+      <div>
+        <label class="block mb-1 font-medium text-white">Role</label>
+        <select [(ngModel)]="editAdminForm.role" class="bg-[#00121C] text-white w-full p-2 rounded">
+          <option value="Admin">Admin</option>
+          <option value="SuperAdmin">Super Admin</option>
+          <option value="Moderator">Moderator</option>
+        </select>
+      </div>
+
+      <!-- Permission Dropdown -->
+      <div>
+        <label class="block mb-1 font-medium text-white">Permission</label>
+        <select [(ngModel)]="editAdminForm.permission" class="bg-[#00121C] text-white w-full p-2 rounded">
+          <option value="Read">Read</option>
+          <option value="Write">Write</option>
+          <option value="Full">Full Access</option>
+        </select>
+      </div>
+
+      <!-- Password -->
+      <div class="relative">
+        <label class="block mb-1 font-medium text-white">Password</label>
+        <div class="flex items-center bg-[#00121C] rounded px-3">
+          <input
+            [(ngModel)]="editAdminForm.password"
+            [type]="editPasswordVisible ? 'text' : 'password'"
+            (input)="checkEditPasswordStrength()"
+            class="bg-transparent text-white py-2 outline-none w-full"
+          />
+          <i
+            class="fas text-white ml-2 cursor-pointer"
+            [ngClass]="editPasswordVisible ? 'fa-eye-slash' : 'fa-eye'"
+            (click)="editPasswordVisible = !editPasswordVisible"
+          ></i>
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="relative">
+        <label class="block mb-1 font-medium text-white">Confirm Password</label>
+        <div class="flex items-center bg-[#00121C] rounded px-3">
+          <input
+            [(ngModel)]="editAdminForm.confirmPassword"
+            [type]="editConfirmVisible ? 'text' : 'password'"
+            (input)="checkEditPasswordMatch()"
+            class="bg-transparent text-white py-2 outline-none w-full"
+          />
+          <i
+            class="fas text-white ml-2 cursor-pointer"
+            [ngClass]="editConfirmVisible ? 'fa-eye-slash' : 'fa-eye'"
+            (click)="editConfirmVisible = !editConfirmVisible"
+          ></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password Feedback -->
+    <div class="space-y-1 text-sm">
+      <div class="h-2 rounded bg-gray-700 overflow-hidden">
+        <div
+          [ngStyle]="{
+            width: editPasswordStrength === 'weak' ? '25%' :
+                   editPasswordStrength === 'medium' ? '60%' :
+                   editPasswordStrength === 'strong' ? '100%' : '0%',
+            backgroundColor: editPasswordStrength === 'weak' ? '#FB0505' :
+                             editPasswordStrength === 'medium' ? '#FCAF08' :
+                             editPasswordStrength === 'strong' ? '#29FB05' : 'transparent'
+          }"
+          class="h-full transition-all"
+        ></div>
+      </div>
+      <p class="text-gray-300" *ngIf="editPasswordTips.length">
+        <span *ngFor="let tip of editPasswordTips" class="block text-red-400">• {{ tip }}</span>
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-between">
+      <button (click)="closeAdminEditModal()" class="bg-[#00121C] px-4 py-2 rounded hover:bg-red-700 text-white">Cancel</button>
+      <button (click)="submitEditAdmin()" class="bg-[#00121C] px-4 py-2 rounded hover:bg-green-600 text-white">Change</button>
+    </div>
+  </div>
+</div>
+
+  </section>
+
+  <!-- Add New Admin Button inside Admin Profile -->
+<div class="flex justify-end mb-4">
+  <button
+    (click)="navigateToAddNewAdmin()"
+    class="px-6 py-3 rounded-full text-white bg-[#00121C] shadow-[inset_6px_6px_10px_#000c13,inset_-6px_-6px_10px_#001a29] hover:bg-[#0E8CCF] flex items-center gap-2 transition-all"
+  >
+    <i class="fas fa-user-plus text-white"></i>
+    <span>Add New Admin</span>
+  </button>
+</div>
+
+<div class="flex-grow p-6 text-white">
+  <router-outlet></router-outlet>
+</div>
+
+  

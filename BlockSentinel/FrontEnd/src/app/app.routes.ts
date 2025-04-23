@@ -19,6 +19,8 @@ import { AdminProfileComponent } from './pages/settings/admin-profile/admin-prof
 import { SystemSyncComponent } from './pages/settings/system-sync-configuration/system-sync/system-sync.component';  
 import { DataBackupComponent } from './pages/settings/data-export-backup-&-logs/data-backup/data-backup.component';
 import { AdvancedConfigurationComponent } from './pages/settings/advanced-configuration/advanced-configuration/advanced-configuration.component';
+import { AddNewAdminComponent } from './pages/settings/add-new-admin/add-new-admin.component';
+
 
 export const routes: Routes = [
 
@@ -54,7 +56,12 @@ export const routes: Routes = [
         { path: 'logs', component: LogsComponent },
         { path: 'settings', component: SettingsComponent,
           children: [
-            { path: 'admin-profile', component: AdminProfileComponent },
+            { path: 'admin-profile', component: AdminProfileComponent,
+              children: [
+                { path: 'add-new-admin', component: AddNewAdminComponent },
+               
+              ]
+             },
             { path: 'system-sync', component: SystemSyncComponent },
             { path: 'data-backup', component: DataBackupComponent },
             { path: 'advanced-config', component: AdvancedConfigurationComponent },
