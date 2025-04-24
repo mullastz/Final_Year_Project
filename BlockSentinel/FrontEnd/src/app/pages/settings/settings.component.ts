@@ -15,11 +15,12 @@ export class SettingsComponent {
   currentRoute: string = '';
 
   menuItems = [
-    { label: 'Admin Profile', route: '/dashboard-pages/settings/admin-profile' },
-    { label: 'System Sync Configuration', route: '/dashboard-pages/settings/system-sync' },
-    { label: 'Data Export Backup & Logs', route: '/dashboard-pages/settings/data-backup' },
-    { label: 'Advanced Configuration', route: '/dashboard-pages/settings/advanced-config' },
+    { label: 'Admin Profile', route: '/dashboard-pages/settings/admin-profile', icon: 'fas fa-user' },
+    { label: 'System Sync Configuration', route: '/dashboard-pages/settings/system-sync', icon: 'fas fa-sync-alt' },
+    { label: 'Data Export Backup & Logs', route: '/dashboard-pages/settings/data-backup', icon: 'fas fa-database' },
+    { label: 'Advanced Configuration', route: '/dashboard-pages/settings/advanced-config', icon: 'fas fa-cogs' },
   ];
+  
 
   constructor(private router: Router) {
     this.setCurrentRoute();

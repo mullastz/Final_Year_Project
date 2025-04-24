@@ -1,1 +1,148 @@
-<p>data-backup works!</p>
+<div class="p-6 space-y-8 text-white">
+    <!-- Main Heading -->
+    <h1 class="text-3xl font-bold">Data Export, Backup & Logs</h1>
+  
+    <!-- Section 1: Export Ledger Data -->
+    <section>
+      <h2 class="text-xl font-semibold mb-4">Export Ledger Data</h2>
+      <div class="bg-[#00121C] p-6 rounded-xl space-y-4 shadow-lg">
+  
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Dropdown Pair 1 -->
+          <div>
+            <label class="block mb-1 text-sm">Select Systems</label>
+            <select class="w-full bg-[#0D1A26] text-white p-2 rounded" [(ngModel)]="exportForm.system">
+              <option *ngFor="let system of systemsOptions" [value]="system">{{ system }}</option>
+            </select>
+          </div>
+  
+          <div>
+            <label class="block mb-1 text-sm">Grouping Style</label>
+            <select class="w-full bg-[#0D1A26] text-white p-2 rounded" [(ngModel)]="exportForm.grouping">
+              <option *ngFor="let group of groupingStyleOptions" [value]="group">{{ group }}</option>
+            </select>
+          </div>
+  
+          <!-- Dropdown Pair 2 -->
+          <div>
+            <label class="block mb-1 text-sm">Formats</label>
+            <select class="w-full bg-[#0D1A26] text-white p-2 rounded" [(ngModel)]="exportForm.format">
+              <option *ngFor="let format of formatsOptions" [value]="format">{{ format }}</option>
+            </select>
+          </div>
+  
+          <div>
+            <label class="block mb-1 text-sm">Export Now</label>
+            <select class="w-full bg-[#0D1A26] text-white p-2 rounded" [(ngModel)]="exportForm.exportNow">
+              <option *ngFor="let now of exportNowOptions" [value]="now">{{ now }}</option>
+            </select>
+          </div>
+  
+          <!-- Dropdown Pair 3 -->
+          <div>
+            <label class="block mb-1 text-sm">Auto</label>
+            <select class="w-full bg-[#0D1A26] text-white p-2 rounded" [(ngModel)]="exportForm.auto">
+                <option *ngFor="let auto of autoExportOptions" [value]="auto">{{ auto }}</option>
+            </select>
+          </div>
+  
+          <div>
+            <label class="block mb-1 text-sm">Export Frequency</label>
+            <select class="w-full bg-[#0D1A26] text-white p-2 rounded" [(ngModel)]="exportForm.exportFrequency">
+              <option *ngFor="let frequency of exportFrequencyOptions" [value]="frequency">{{ frequency }}</option>
+            </select>
+          </div>
+  
+          <!-- Full-width: Destination -->
+          <div class="md:col-span-2">
+            <label class="block mb-1 text-sm">Destination</label>
+            <select class="w-full bg-[#0D1A26] text-white p-2 rounded" [(ngModel)]="exportForm.destination">
+              <option *ngFor="let destination of exportDestinationOptions" [value]="destination">{{ destination }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <!-- Section 2: Backup & Recovery -->
+    <section>
+      <h2 class="text-xl font-semibold mb-4">Backup & Recovery</h2>
+      <div class="bg-[#00121C] p-6 rounded-xl space-y-6 shadow-lg">
+  
+        <!-- Compartment 1: Buttons -->
+        <div class="flex justify-between">
+          <button class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700" (click)="generateLedgerBackup()">Generate Ledger Backup</button>
+          <button class="bg-green-600 px-4 py-2 rounded hover:bg-green-700" (click)="restoreBackup()">Restore Backup</button>
+        </div>
+        <hr class="border-gray-700" />
+  
+        <!-- Compartment 2: Schedule -->
+        <div>
+          <h3 class="text-sm font-medium mb-2">Backup Schedule:</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block mb-1 text-sm">Frequency</label>
+              <select class="w-full bg-[#0D1A26] text-white p-2 rounded" [(ngModel)]="backupSchedule.frequency">
+                <option *ngFor="let frequency of backupFrequencyOptions" [value]="frequency">{{ frequency }}</option>
+              </select>
+            </div>
+            <div>
+              <label class="block mb-1 text-sm">Time</label>
+              <select class="w-full bg-[#0D1A26] text-white p-2 rounded" [(ngModel)]="backupSchedule.time">
+                <option *ngFor="let time of  backupTimeOptions" [value]="time">{{ time }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <hr class="border-gray-700" />
+  
+        <!-- Compartment 3: Backup Location -->
+        <div>
+          <label class="block mb-1 text-sm">Backup Location</label>
+          <select class="w-full bg-[#0D1A26] text-white p-2 rounded" [(ngModel)]="backupSchedule.location">
+            <option *ngFor="let location of backupLocationOptions" [value]="location">{{ location }}</option>
+          </select>
+        </div>
+      </div>
+    </section>
+  
+    <!-- Section 3: Activity Logs Settings -->
+    <section>
+      <h2 class="text-xl font-semibold mb-4">Activity Logs Settings</h2>
+      <div class="bg-[#00121C] p-6 rounded-xl space-y-6 shadow-lg">
+  
+        <!-- Compartment 1: Retain & Download Logs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block mb-1 text-sm">Retain Logs</label>
+            <select class="w-full bg-[#0D1A26] text-white p-2 rounded" [(ngModel)]="logSettings.retain">
+              <option *ngFor="let retain of retainLogsOptions" [value]="retain">{{ retain }}</option>
+            </select>
+          </div>
+          <div>
+            <label class="block mb-1 text-sm">Download Logs</label>
+            <select class="w-full bg-[#0D1A26] text-white p-2 rounded" [(ngModel)]="logSettings.download">
+              <option *ngFor="let download of downloadLogsOptions" [value]="download">{{ download }}</option>
+            </select>
+          </div>
+        </div>
+        <hr class="border-gray-700" />
+  
+        <!-- Compartment 2: Smart Log Filters -->
+        <div class="flex justify-between items-center">
+          <label class="text-sm font-medium">Enable Smart Log Filters</label>
+          <input type="checkbox" [(ngModel)]="logSettings.smartFilter" class="toggle-checkbox w-10 h-5 rounded-full bg-gray-600 checked:bg-blue-600 transition duration-200" />
+        </div>
+        <hr class="border-gray-700" />
+  
+        <!-- Compartment 3: Auto Export Logs -->
+        <div>
+          <label class="block mb-1 text-sm">Auto Export Logs</label>
+          <select class="w-full bg-[#0D1A26] text-white p-2 rounded" [(ngModel)]="logSettings.autoExport">
+            <option *ngFor="let auto of autoExportLogsOptions" [value]="auto">{{ auto }}</option>
+          </select>
+        </div>
+      </div>
+    </section>
+  </div>
+ 

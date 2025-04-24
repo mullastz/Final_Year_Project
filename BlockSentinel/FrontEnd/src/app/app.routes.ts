@@ -56,16 +56,12 @@ export const routes: Routes = [
         { path: 'logs', component: LogsComponent },
         { path: 'settings', component: SettingsComponent,
           children: [
-            { path: 'admin-profile', component: AdminProfileComponent,
-              children: [
-                { path: 'add-new-admin', component: AddNewAdminComponent },
-               
-              ]
-             },
+            { path: 'admin-profile', component: AdminProfileComponent},
             { path: 'system-sync', component: SystemSyncComponent },
             { path: 'data-backup', component: DataBackupComponent },
             { path: 'advanced-config', component: AdvancedConfigurationComponent },
-            { path: '', redirectTo: 'admin-profile', pathMatch: 'full' }
+            { path: '', redirectTo: 'admin-profile', pathMatch: 'full' },
+            { path: 'add-new-admin', component: AddNewAdminComponent }
           ]
          },
         { path: 'health', component: HealthComponent },

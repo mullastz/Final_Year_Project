@@ -1,1 +1,133 @@
-<p>advanced-configuration works!</p>
+<!-- advanced-configuration.component.html -->
+
+<div class="p-6 space-y-8 text-white">
+
+    <!-- Page Title -->
+    <h1 class="text-3xl font-semibold">Advanced Configuration</h1>
+  
+    <!-- === Endpoint Rewrite Rules Section === -->
+    <section>
+      <h2 class="text-xl mb-4 font-medium">Endpoint Rewrite Rules</h2>
+  
+      <!-- Rewrite Strategy Card -->
+      <div class="bg-[#00121C] p-6 rounded-lg shadow-md space-y-4">
+        <h3 class="text-lg mb-2 font-medium">Rewrite Strategy:</h3>
+  
+        <div class="space-y-2">
+          <label class="flex items-center space-x-3">
+            <input type="radio" name="rewriteStrategy" value="system" class="neumorphic-radio">
+            <span>Per System</span>
+          </label>
+          <label class="flex items-center space-x-3">
+            <input type="radio" name="rewriteStrategy" value="global" class="neumorphic-radio">
+            <span>Global</span>
+          </label>
+          <label class="flex items-center space-x-3">
+            <input type="radio" name="rewriteStrategy" value="module" class="neumorphic-radio">
+            <span>By Module</span>
+          </label>
+        </div>
+      </div>
+  
+      <!-- JSON Editor Card -->
+      <div class="bg-[#00121C] p-6 mt-6 rounded-lg shadow-md">
+        <h3 class="text-lg mb-4 font-medium">Rewrite Logic (JSON Editor):</h3>
+  
+       <!-- Placeholder for JSON editor -->
+<pre class="bg-[#0A1A24] p-4 rounded border border-gray-700 min-h-[200px] text-sm font-mono whitespace-pre-wrap">
+  {{ '{ "exampleKey": "exampleValue" }' }}
+</pre>
+
+  
+        <div class="flex justify-between mt-6">
+          <button class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-white">Save</button>
+          <button class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded text-white">Test</button>
+        </div>
+      </div>
+    </section>
+  
+    <!-- === Webhook Integration Section === -->
+    <section>
+      <div class="flex justify-between items-center">
+        <h2 class="text-xl font-medium">Webhook Integration</h2>
+        <button (click)="openModal()" class="bg-blue-700 px-4 py-2 rounded flex items-center space-x-2 hover:bg-blue-800">
+          <i class="fas fa-plus"></i>
+          <span>Add</span>
+        </button>
+      </div>
+  
+      <!-- Webhook Table Card -->
+      <div class="bg-[#00121C] mt-4 p-4 rounded-lg shadow-md">
+        <table class="w-full text-left table-auto border-collapse">
+          <thead>
+            <tr class="bg-[#011F2F] text-white">
+              <th class="px-4 py-2">URL</th>
+              <th class="px-4 py-2">Event</th>
+              <th class="px-4 py-2">Status</th>
+              <th class="px-4 py-2">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data rows go here -->
+            <tr *ngFor="let webhook of webhooks">
+              <td class="px-4 py-2">{{ webhook.url }}</td>
+              <td class="px-4 py-2">{{ webhook.event }}</td>
+              <td class="px-4 py-2">{{ webhook.status }}</td>
+              <td class="px-4 py-2 relative">
+                <button (click)="toggleActionMenu(webhook)" class="text-lg"><i class="fas fa-ellipsis-v"></i></button>
+                <div *ngIf="webhook.showMenu" class="absolute right-0 mt-2 w-32 bg-gray-900 border border-gray-700 rounded shadow-md z-10">
+                  <button class="flex items-center w-full px-4 py-2 hover:bg-gray-800" (click)="editWebhook(webhook)">
+                    <i class="fas fa-edit mr-2"></i>Edit
+                  </button>
+                  <button class="flex items-center w-full px-4 py-2 hover:bg-gray-800" (click)="deleteWebhook(webhook.id)">
+                    <i class="fas fa-trash mr-2"></i>Remove
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+  
+        <div class="text-right mt-4">
+          <button class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded text-white">Test</button>
+        </div>
+      </div>
+  
+      <!-- Add Webhook Modal -->
+      <div *ngIf="isModalOpen" class="fixed inset-0 bg-[#00000090] backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="bg-[#011F2F] p-6 rounded-lg w-full max-w-md">
+          <h3 class="text-center text-xl mb-4">Add New Webhook</h3>
+          <div class="mb-4">
+            <label class="block mb-1">URL</label>
+            <div class="relative">
+              <i class="fas fa-link absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+              <input type="text" [(ngModel)]="newWebhook.url" class="pl-10 w-full py-2 rounded bg-gray-800 border border-gray-700 text-white" placeholder="Enter URL" />
+            </div>
+          </div>
+  
+          <div class="mb-6">
+            <label class="block mb-1">Event Type</label>
+            <select [(ngModel)]="newWebhook.event" class="w-full py-2 rounded bg-gray-800 border border-gray-700 text-white">
+              <option *ngFor="let event of eventTypes" [value]="event">{{ event }}</option>
+            </select>
+          </div>
+  
+          <div class="flex justify-between">
+            <button (click)="closeModal()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white">Cancel</button>
+            <button (click)="saveWebhook()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white">Add</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <!-- === Blockchain Parameters Section === -->
+    <section>
+      <h2 class="text-xl mb-4 font-medium">Blockchain Parameters</h2>
+  
+      <div class="bg-[#00121C] p-6 rounded-lg shadow-md">
+        <!-- Content based on Figma design, placeholder for now -->
+        <p class="text-gray-300">Blockchain parameter configuration goes here.</p>
+      </div>
+    </section>
+  </div>
+

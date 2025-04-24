@@ -1,1 +1,282 @@
-<p>system-sync works!</p>
+<h2 class="text-3xl font-bold ">System Sync Configuration</h2>
+<div class="p-6 space-y-8 text-white relative">
+  
+    <!-- Dropdown button -->
+ 
+    <div class="absolute top-0 right-0 mt-3 bg-[#011F2F] rounded-md shadow-lg z-10">
+      <button
+        class="bg-[#00121C] text-white px-4 py-2 rounded-md flex items-center gap-2"
+        (click)="toggleDropdownSystemSelect()"
+        type="button"
+      >
+        <i class="fas fa-cog"></i>
+        {{ selectedSystem }}
+        <svg
+          class="w-4 h-4 ml-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+
+      <!-- Dropdown Menu -->
+      <ul
+      *ngIf="dropdownOpenSystemSelect"
+        class="absolute right-0 mt-2 w-48 bg-[#00121C] rounded-md shadow-lg z-10 divide-y divide-gray-700 text-sm"
+      >
+        <li
+          class="cursor-pointer px-4 py-2 hover:bg-[#0E8CCF]"
+          [class.bg-[#0E8CCF]]="selectedSystem === 'All Systems'"
+          (click)="onSystemSelect('All Systems')"
+        >
+          All Systems
+        </li>
+        <li
+          *ngFor="let system of registeredSystems"
+          class="cursor-pointer px-4 py-2 hover:bg-[#0E8CCF]"
+          [class.bg-[#0E8CCF]]="selectedSystem === system"
+          (click)="onSystemSelect(system)"
+        >
+          {{ system }}
+        </li>
+      </ul>
+    </div>  
+  <section class="mt-12">
+    <h2 class="text-xl font-semibold mb-4">Auto Sync Frequency</h2>
+      <div class="bg-[#00121C] rounded-xl shadow-lg p-3 relative mt-4"> 
+      <!-- Sync Frequency Options -->
+      <div class="mt-10 space-y-4">
+        <label class="flex items-center gap-4 cursor-pointer">
+          <input
+            type="radio"
+            name="syncFrequency"
+            class="neumorphic-radio"
+            value="real-time"
+            (change)="onFrequencyChange('real-time')"
+            [checked]="syncFrequency === 'real-time'"
+          />
+          <span><strong>Real-Time</strong> - Sync happens instantly as new data is saved</span>
+        </label>
+        <label class="flex items-center gap-4 cursor-pointer">
+          <input
+            type="radio"
+            name="syncFrequency"
+            class="neumorphic-radio"
+            value="15-minutes"
+            (change)="onFrequencyChange('15-minutes')"
+            [checked]="syncFrequency === '15-minutes'"
+          />
+          <span><strong>15 Minutes</strong> - Data is synced every 15 minutes</span>
+        </label>
+        <label class="flex items-center gap-4 cursor-pointer">
+          <input
+            type="radio"
+            name="syncFrequency"
+            class="neumorphic-radio"
+            value="1-hour"
+            (change)="onFrequencyChange('1-hour')"
+            [checked]="syncFrequency === '1-hour'"
+          />
+          <span><strong>1 Hour</strong> - Data is synced every one hour</span>
+        </label>
+        <label class="flex items-center gap-4 cursor-pointer">
+          <input
+            type="radio"
+            name="syncFrequency"
+            class="neumorphic-radio"
+            value="daily"
+            (change)="onFrequencyChange('daily')"
+            [checked]="syncFrequency === 'daily'"
+          />
+          <span><strong>Daily</strong> - Data is synced once per day</span>
+        </label>
+      </div>
+
+      <!-- Submit Button centered -->
+      <div class="mt-6 flex justify-center">
+        <button
+          class="bg-[#011F2F] hover:bg-[#0E8CCF] transition px-6 py-2 rounded-lg text-white font-semibold shadow"
+          (click)="updateInterval()"
+        >
+          Update Interval
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sync Logic Mapping -->
+<section class="mt-12">
+  <h2 class="text-xl font-semibold mb-4 text-white">Sync Logic Mapping</h2>
+
+  <div class="bg-[#00121C] rounded-xl shadow-lg p-6 relative">
+
+  <!-- Sync Logic Content -->
+<div *ngIf="selectedSystem === 'All Systems'; else singleSystemView">
+  <div *ngFor="let system of fullSystemData" class="mb-6 p-4 bg-[#00121C] rounded-xl shadow-md">
+    <!-- Top Row: Logo + Name -->
+    <div class="flex items-center gap-4 mb-2">
+      <img [src]="system.logo" alt="System Logo" class="w-8 h-8 rounded-full object-cover" />
+      <h3 class="text-lg font-semibold">{{ system.name }}</h3>
+    </div>
+
+    <!-- Sync Info -->
+    <div class="text-sm text-gray-300 space-y-1">
+      <p><strong>Sync Source:</strong> {{ system.url }}</p>
+      <p><strong>Sync Target:</strong> Blockchain Ledger /{{ sanitizeName(system.name) }}/</p>
+    </div>
+  </div>
+</div>
+
+<!-- Fallback view for single system -->
+<ng-template #singleSystemView>
+  <div class="mb-6 p-4 bg-[#00121C] rounded-xl shadow-md" *ngIf="selectedSystemDetails">
+    <div class="flex items-center gap-4 mb-2">
+      <img [src]="selectedSystemDetails.logo" alt="System Logo" class="w-8 h-8 rounded-full object-cover" />
+      <h3 class="text-lg font-semibold">{{ selectedSystemDetails.name }}</h3>
+    </div>
+    <div class="text-sm text-gray-300 space-y-1">
+      <p><strong>Sync Source:</strong> {{ selectedSystemDetails.url }}</p>
+      <p><strong>Sync Target:</strong> {{ syncTarget }}</p>
+    </div>
+  </div>
+</ng-template>
+</div>
+</section>
+
+<div class="bg-[#00121C] rounded-xl p-6 relative shadow-inner border border-[#012B3D]">
+  <h2 class="text-white font-semibold mb-2 text-lg">Transform Logic</h2>
+  <hr class="border-gray-700 mb-4">
+
+  <!-- No Transformation -->
+<div class="flex justify-between items-center mb-4">
+  <div>
+    <h3 class="text-white font-medium">No Transformation</h3>
+    <p class="text-gray-400 text-sm">Use original value as-is</p>
+  </div>
+  <!-- Neumorphic Toggle -->
+  <label class="relative inline-flex items-center cursor-pointer">
+    <input type="checkbox" class="sr-only peer" [(ngModel)]="noTransformEnabled">
+    <div class="w-12 h-6 bg-[#001B2B] rounded-full peer peer-focus:ring-2 peer-focus:ring-[#01405B] shadow-inner transition duration-300 ease-in-out after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all after:shadow-md peer-checked:after:translate-x-6 peer-checked:bg-[#01405B]"></div>
+  </label>
+</div>
+
+  <hr class="border-gray-700 mb-4">
+
+  <!-- Numeric Rule -->
+  <h3 class="text-white font-medium mb-2">Numeric Rule</h3>
+  <div class="grid grid-cols-2 gap-4 mb-4">
+    <label class="flex items-center gap-2 text-white">
+      <input type="radio" name="numericRule" class="neumorphic-radio">
+      Round
+    </label>
+    <label class="flex items-center gap-2 text-white">
+      <input type="radio" name="numericRule" class="neumorphic-radio">
+      Add
+    </label>
+    <label class="flex items-center gap-2 text-white">
+      <input type="radio" name="numericRule" class="neumorphic-radio">
+      Multiply
+    </label>
+    <label class="flex items-center gap-2 text-white">
+      <input type="radio" name="numericRule" class="neumorphic-radio">
+      Convert scale
+    </label>
+  </div>
+  <hr class="border-gray-700 mb-4">
+
+  <!-- Date Rule -->
+  <h3 class="text-white font-medium mb-2">Date Rule</h3>
+  <div class="flex flex-col gap-2 mb-4">
+    <label class="flex items-center gap-2 text-white">
+      <input type="radio" name="dateRule" class="neumorphic-radio">
+      Format to ISO
+    </label>
+    <label class="flex items-center gap-2 text-white">
+      <input type="radio" name="dateRule" class="neumorphic-radio">
+      UTC
+    </label>
+    <label class="flex items-center gap-2 text-white">
+      <input type="radio" name="dateRule" class="neumorphic-radio">
+      Relative time
+    </label>
+  </div>
+  <hr class="border-gray-700 mb-4">
+
+  <!-- String Rule -->
+  <h3 class="text-white font-medium mb-2">String Rule</h3>
+  <div class="grid grid-cols-2 gap-4 mb-4">
+    <label class="flex items-center gap-2 text-white">
+      <input type="radio" name="stringRule" class="neumorphic-radio">
+      Capitalize
+    </label>
+    <label class="flex items-center gap-2 text-white">
+      <input type="radio" name="stringRule" class="neumorphic-radio">
+      Lowercase
+    </label>
+    <label class="flex items-center gap-2 text-white">
+      <input type="radio" name="stringRule" class="neumorphic-radio">
+      Uppercase
+    </label>
+    <label class="flex items-center gap-2 text-white">
+      <input type="radio" name="stringRule" class="neumorphic-radio">
+      Trim
+    </label>
+  </div>
+  <hr class="border-gray-700 mb-4">
+
+  <!-- Mapping Rule -->
+  <h3 class="text-white font-medium mb-2">Mapping Rule</h3>
+  <div class="flex flex-col gap-2 mb-4">
+    <label class="flex items-center gap-2 text-white">
+      <input type="radio" name="mappingMode" class="neumorphic-radio">
+      Visual Mode
+    </label>
+    <label class="flex items-center gap-2 text-white">
+      <input type="radio" name="mappingMode" class="neumorphic-radio">
+      Custom Logic Mode
+    </label>
+  </div>
+
+  <!-- Mapping Rule Table -->
+  <table class="w-full text-white text-sm border border-[#011F2F]">
+    <thead class="bg-[#011F2F]">
+      <tr>
+        <th class="p-2 text-left">Source Field</th>
+        <th class="p-2 text-left">Target Field</th>
+        <th class="p-2 text-left">Transform Rule</th>
+        <th class="p-2 text-left">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rule of rules">
+        <td class="p-2">{{ rule.sourceField }}</td>
+        <td class="p-2">{{ rule.targetField }}</td>
+        <td class="p-2">{{ rule.transformRule }}</td>
+        <td class="p-2 relative">
+          <button (click)="toggleDropdown(rule.id)" class="hover:text-blue-400">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+          <div *ngIf="openDropdownId === rule.id" class="absolute right-0 top-6 bg-[#012B3D] text-white rounded shadow-md w-32 z-10">
+            <button (click)="editRule(rule)" class="block w-full text-left px-4 py-2 hover:bg-[#01405B]">
+              <i class="fas fa-edit mr-2"></i>Edit
+            </button>
+            <button (click)="removeRule(rule.id)" class="block w-full text-left px-4 py-2 hover:bg-[#600F0F]">
+              <i class="fas fa-trash mr-2"></i>Remove
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+</div>

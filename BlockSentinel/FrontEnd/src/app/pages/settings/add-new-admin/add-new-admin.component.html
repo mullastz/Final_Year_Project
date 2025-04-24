@@ -1,1 +1,152 @@
-<p>add-new-admin works!</p>
+<div class="p-6">
+  <!-- Heading -->
+  <h1 class="text-2xl font-semibold mb-6 text-white">Add New Admin</h1>
+
+  <!-- New Admin Detail Section -->
+  <h2 class="text-lg font-semibold text-white mb-4">New Admin Detail</h2>
+  <section class="bg-[#00121C] p-6 rounded-lg shadow-md">
+    <!-- Admin Name Field -->
+    <div class="mb-4">
+      <label class="block text-white mb-1">Admin Name</label>
+      <div class="relative">
+        <input
+          type="text"
+          class=" pl-10 pr-4 py-2 rounded bg-[#011F2F] text-white placeholder-gray-400 focus:outline-none focus:ring focus:ring-blue-500"
+        />
+        <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+    </div>
+
+    <!-- Email Field -->
+    <div>
+      <label class="block text-white mb-1">Email</label>
+      <div class="relative">
+        <input
+          type="email"
+          class=" pl-10 pr-4 py-2 rounded bg-[#011F2F] text-white placeholder-gray-400 focus:outline-none focus:ring focus:ring-blue-500"
+        />
+        <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- Role Section -->
+  <h2 class="text-lg font-semibold text-white mb-4 mt-4">Role</h2>
+  <section class="bg-[#00121C] p-6 rounded-lg shadow-md mt-4">
+    <div class="space-y-4">
+      <!-- Viewer -->
+      <label class="flex items-center gap-4 text-white cursor-pointer">
+        <input
+          type="radio"
+          name="adminRole"
+          value="viewer"
+          class="neumorphic-radio"
+        />
+        <span>
+          Viewer – <span class="text-sm text-gray-400">Can only view data</span>
+        </span>
+      </label>
+
+      <!-- Manager -->
+      <label class="flex items-center gap-4 text-white cursor-pointer">
+        <input
+          type="radio"
+          name="adminRole"
+          value="manager"
+          class="neumorphic-radio"
+        />
+        <span>
+          Manager – <span class="text-sm text-gray-400">Can manage system data</span>
+        </span>
+      </label>
+
+      <!-- Super Admin -->
+      <label class="flex items-center gap-4 text-white cursor-pointer">
+        <input
+          type="radio"
+          name="adminRole"
+          value="superadmin"
+          class="neumorphic-radio"
+        />
+        <span>
+          Super Admin – <span class="text-sm text-gray-400">Full access including Settings</span>
+        </span>
+      </label>
+    </div>
+  </section>
+
+  <!-- Password Section -->
+<h2 class="text-lg font-semibold text-white mb-4 mt-4">Password</h2>
+<section class="bg-[#00121C] p-6 rounded-lg shadow-md mt-4">
+
+  <!-- Password Input -->
+  <div class="relative mb-6">
+    <input
+      [(ngModel)]="passwordForm.new"
+      (input)="onNewPasswordChange()"
+      [type]="passwordVisible.new ? 'text' : 'password'"
+      id="new-password"
+      class="w-full pt-6 pb-2 text-white bg-transparent border-b border-gray-500 focus:outline-none focus:border-blue-500"
+      required
+    />
+    <label
+      for="new-password"
+      class="floating-label"
+      [class.floating]="passwordForm.new && passwordForm.new.length > 0"
+    >Password</label>
+    <div class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white cursor-pointer" (click)="togglePasswordVisibility('new')">
+      <i class="fas" [ngClass]="passwordVisible.new ? 'fa-eye-slash' : 'fa-eye'"></i>
+    </div>
+  </div>
+
+  <!-- Confirm Password Input -->
+  <div class="relative mb-6">
+    <input
+      [(ngModel)]="passwordForm.confirm"
+      (input)="onConfirmPasswordChange()"
+      [type]="passwordVisible.confirm ? 'text' : 'password'"
+      id="confirm-password"
+      class="w-full pt-6 pb-2 text-white bg-transparent border-b border-gray-500 focus:outline-none focus:border-blue-500"
+      required
+    />
+    <label
+      for="confirm-password"
+      class="floating-label"
+      [class.floating]="passwordForm.confirm && passwordForm.confirm.length > 0"
+    >Confirm Password</label>
+    <div class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white cursor-pointer" (click)="togglePasswordVisibility('confirm')">
+      <i class="fas" [ngClass]="passwordVisible.confirm ? 'fa-eye-slash' : 'fa-eye'"></i>
+    </div>
+  </div>
+
+  <!-- Password Strength Feedback -->
+  <div class="h-2 w-full rounded-full overflow-hidden bg-gray-700 mb-2">
+    <div
+      [ngClass]="{
+        'bg-red-500 w-1/4': passwordStrength === 'weak',
+        'bg-yellow-500 w-2/4': passwordStrength === 'medium',
+        'bg-green-500 w-full': passwordStrength === 'strong'
+      }"
+      class="h-full transition-all duration-300"
+    ></div>
+  </div>
+  <p class="text-sm text-gray-400 mb-2">Mix Uppercase, Lowercase, Number and Special Character</p>
+  <div *ngFor="let tip of passwordTips" class="text-xs text-red-400">{{ tip }}</div>
+  <div *ngFor="let tip of matchTips" class="text-xs" [ngClass]="{'text-green-400': tip.includes('✔'), 'text-red-400': tip.includes('✖')}">{{ tip }}</div>
+</section>
+
+<!-- Action Buttons -->
+<div class="flex justify-between mt-6">
+  <button class="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600" (click)="router.navigate(['/dashboard-pages/settings/admin-profile'])">
+    Cancel
+  </button>
+  <button
+    class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+    [disabled]="!adminName || !adminEmail || !selectedRole || !passwordForm.new || !passwordForm.confirm || passwordForm.new !== passwordForm.confirm"
+    (click)="submitNewAdmin()"
+  >
+    Create
+  </button>
+</div>
+
+</div>

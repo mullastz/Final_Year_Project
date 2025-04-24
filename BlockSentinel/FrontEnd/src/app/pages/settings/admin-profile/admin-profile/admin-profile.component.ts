@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 export class AdminProfileComponent {
 
 navigateToAddNewAdmin() {
-  this.router.navigate(['/dashboard-pages/settings/admin-profile/add-new-admin']);
+  this.router.navigate(['/dashboard-pages/settings/add-new-admin']);
 }
   admin = {
     name: 'John Doe',

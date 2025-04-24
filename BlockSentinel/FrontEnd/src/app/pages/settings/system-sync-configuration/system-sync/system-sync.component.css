@@ -1,0 +1,30 @@
+.neumorphic-radio {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  cursor: pointer;
+  background-color: hsla(0, 0%, 0%, 0.2);
+  background-image: radial-gradient(
+    hsla(200, 100%, 90%, 1) 0%,
+    hsla(200, 100%, 70%, 1) 15%,
+    hsla(200, 100%, 60%, 0.3) 28%,
+    hsla(200, 100%, 30%, 0) 70%
+  );
+  background-repeat: no-repeat;
+  background-position: 0 24px;
+  box-shadow:
+    hsla(0, 0%, 100%, 0.15) 0 1px 1px,
+    inset hsla(0, 0%, 0%, 0.5) 0 0 0 1px;
+  transition:
+    background-position 0.15s cubic-bezier(0.8, 0, 1, 1),
+    transform 0.25s cubic-bezier(0.8, 0, 1, 1);
+}
+.neumorphic-radio:checked {
+  background-position: 0 0;
+}
+.neumorphic-radio:active {
+  transform: scale(1.2);
+}
+
