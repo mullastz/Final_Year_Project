@@ -1,0 +1,12 @@
+<div *ngFor="let resource of usageData" class="mb-8 p-4 rounded-lg shadow-lg bg-[#00122A]">
+    <h3 class="font-bold mb-2 text-lg text-white">{{ resource.type }} Usage</h3>
+    <apx-chart
+      [series]="getChartSeries(resource)"
+      [chart]="{ type: 'line', height: 250 }"
+      [xaxis]="{ categories: getCategories(resource) }"
+      [stroke]="{ curve: 'smooth', width: 4, colors: ['#29FB05'] }"
+      [colors]="['#29FB05']"
+      [fill]="{ type: 'gradient', gradient: { shade: 'light', type: 'vertical', shadeIntensity: 0.9, opacityFrom: 0.9, opacityTo: 0.9 } }"
+    ></apx-chart>
+  </div>
+  

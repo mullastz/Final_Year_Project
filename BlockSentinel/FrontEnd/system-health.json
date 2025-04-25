@@ -1,0 +1,88 @@
+{
+    "system-health": [
+    {
+      "id": 1,
+      "service": "Core Engine",
+      "status": "Running",
+      "lastChecked": "2025-04-24T10:30:00Z"
+    },
+    {
+      "id": 2,
+      "service": "Blockchain",
+      "status": "Slow Sync",
+      "lastChecked": "2025-04-24T10:31:00Z"
+    },
+    {
+      "id": 3,
+      "service": "Node",
+      "status": "Healthy",
+      "lastChecked": "2025-04-24T10:32:00Z"
+    },
+    {
+      "id": 4,
+      "service": "Database Sync",
+      "status": "Down",
+      "lastChecked": "2025-04-24T10:33:00Z"
+    },
+    {
+      "id": 5,
+      "service": "Webhook Service",
+      "status": "Running",
+      "lastChecked": "2025-04-24T10:34:00Z"
+    },
+    {
+      "id": 6,
+      "service": "Scheduler",
+      "status": "Running",
+      "lastChecked": "2025-04-24T10:35:00Z"
+    },
+    {
+        "id": 7,
+        "service": "API Gateway",
+        "status": "Running",
+        "lastChecked": "2025-04-24T10:36:00Z"
+    },
+    {
+        "id": 8,
+        "service": "Notification Service",
+        "status": "Running",
+        "lastChecked": "2025-04-24T10:37:00Z"
+    },
+    {
+        "id": 9,
+        "service": "Data Processing",
+        "status": "Running",
+        "lastChecked": "2025-04-24T10:38:00Z"
+    },
+    {
+        "id": 10,
+        "service": "Backup Service",
+        "status": "Running",
+        "lastChecked": "2025-04-24T10:39:00Z"
+    },
+    {
+        "id": 11,
+        "service": "Load Balancer",
+        "status": "Running",
+        "lastChecked": "2025-04-24T10:40:00Z"
+    },
+    {
+        "id": 12,
+        "service": "Cache Service",
+        "status": "Running",
+        "lastChecked": "2025-04-24T10:41:00Z"
+    },
+    {
+        "id": 13,
+        "service": "Monitoring Service",
+        "status": "Running",
+        "lastChecked": "2025-04-24T10:42:00Z"
+    },
+    {
+        "id": 14,
+        "service": "Analytics Service",
+        "status": "Running",
+        "lastChecked": "2025-04-24T10:43:00Z"
+    }
+  ]
+}

@@ -20,6 +20,11 @@ import { SystemSyncComponent } from './pages/settings/system-sync-configuration/
 import { DataBackupComponent } from './pages/settings/data-export-backup-&-logs/data-backup/data-backup.component';
 import { AdvancedConfigurationComponent } from './pages/settings/advanced-configuration/advanced-configuration/advanced-configuration.component';
 import { AddNewAdminComponent } from './pages/settings/add-new-admin/add-new-admin.component';
+import { SystemHealthOverviewComponent } from './pages/health/System-Health-Overview/system-health-overview/system-health-overview.component';
+import { ResourceUsageMonitorComponent } from './pages/health/Resource-Usage-Monitor/resource-usage-monitor/resource-usage-monitor.component';
+import { ConnectedSystemsStatusComponent } from './pages/health/Connected-Systems-Status/connected-systems-status/connected-systems-status.component';
+import { AlertsNotificationsComponent } from './pages/health/ Alerts-Notifications/alerts-notifications/alerts-notifications.component';
+
 
 
 export const routes: Routes = [
@@ -64,7 +69,15 @@ export const routes: Routes = [
             { path: 'add-new-admin', component: AddNewAdminComponent }
           ]
          },
-        { path: 'health', component: HealthComponent },
+        { path: 'health', component: HealthComponent,
+          children: [
+            { path: 'system-health-overview', component: SystemHealthOverviewComponent },
+            { path: 'resource-usage-monitor', component: ResourceUsageMonitorComponent },
+            { path: 'connected-system-status', component: ConnectedSystemsStatusComponent },
+            { path: 'alert-notification', component: AlertsNotificationsComponent },
+            { path: '', redirectTo: 'system-health-overview', pathMatch: 'full' },
+          ]
+         },
         { path: 'sync-status', component: SyncStatusComponent },
         { path: 'system-detail/:id', component: SystemDetailComponent },
         { path: 'ledger-detail/:systemId/:batchId', component: LedgerDetailComponent },

@@ -1,0 +1,36 @@
+{
+    "resource-usage":[
+    {
+      "type": "CPU",
+      "data": [
+        { "timestamp": "10:00", "usagePercent": 30 },
+        { "timestamp": "10:10", "usagePercent": 45 },
+        { "timestamp": "10:20", "usagePercent": 50 }
+      ]
+    },
+    {
+      "type": "Memory",
+      "data": [
+        { "timestamp": "10:00", "usagePercent": 40 },
+        { "timestamp": "10:10", "usagePercent": 60 },
+        { "timestamp": "10:20", "usagePercent": 75 }
+      ]
+    },
+    {
+      "type": "Storage",
+      "data": [
+        { "timestamp": "10:00", "usagePercent": 55 },
+        { "timestamp": "10:10", "usagePercent": 57 },
+        { "timestamp": "10:20", "usagePercent": 58 }
+      ]
+    },
+    {
+      "type": "Gas",
+      "data": [
+        { "timestamp": "10:00", "usagePercent": 10 },
+        { "timestamp": "10:10", "usagePercent": 12 },
+        { "timestamp": "10:20", "usagePercent": 15 }
+      ]
+    }
+  ]
+}

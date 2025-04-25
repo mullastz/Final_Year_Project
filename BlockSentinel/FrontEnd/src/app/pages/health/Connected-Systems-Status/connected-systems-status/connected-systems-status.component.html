@@ -1,0 +1,30 @@
+<div class="p-6">
+    <h2 class="text-2xl font-bold text-white mb-6">Connected Systems Status</h2>
+  
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm text-white">
+        <thead>
+          <tr class="bg-[#00121C] text-left">
+            <th class="py-3 px-4">System</th>
+            <th class="py-3 px-4">Status</th>
+            <th class="py-3 px-4">Last Sync</th>
+            <th class="py-3 px-4">Sync Interval</th>
+            <th class="py-3 px-4">Errors</th>
+          </tr>
+        </thead>
+        <tbody class="bg-[#02182B] divide-y divide-gray-700">
+          <tr *ngFor="let system of connectedSystems">
+            <td class="py-3 px-4">{{ system.system }}</td>
+            <td class="py-3 px-4 flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full" [ngClass]="getStatusColor(system.status)"></span>
+              {{ system.status }}
+            </td>
+            <td class="py-3 px-4">{{ system.lastSync }}</td>
+            <td class="py-3 px-4">{{ system.syncInterval }}</td>
+            <td class="py-3 px-4">{{ system.errors }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
