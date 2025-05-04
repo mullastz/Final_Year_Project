@@ -1,27 +1,45 @@
-
 <div class="min-h-screen bg-[#00121C] flex items-center justify-center p-4">
-    <div class="bg-[#00121C] border-2 border-black shadow-[8px_8px_16px_#000,_-8px_-8px_16px_#0a2a3f] rounded-2xl p-10 w-full max-w-md">
-      
-      <h1 class="text-white text-3xl font-bold font-['Inknut_Antiqua'] text-center mb-8">Block Sentinel</h1>
-  
+  <div class="bg-[#00121C] border-2 border-black shadow-[8px_8px_16px_#000,_-8px_-8px_16px_#0a2a3f] rounded-2xl p-10 w-full max-w-md">
+    
+    <h1 class="text-white text-3xl font-bold font-['Inknut_Antiqua'] text-center mb-8">Block Sentinel</h1>
+
+    <!-- Login Form -->
+    <form (ngSubmit)="login()" #loginForm="ngForm">
+
       <!-- Email Section -->
       <label class="text-white block mb-1" for="email">Email</label>
       <div class="relative mb-6">
-        <input id="email" type="email" class="w-full bg-[#011F2F] text-white pl-10 py-2 rounded-full shadow-inner outline-none placeholder-gray-400" placeholder="Enter your email">
-        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-white pointer-events-none">
-          📧
-        </span>
+        <input id="email"
+               name="email"
+               type="email"
+               required
+               autocomplete="email"
+               [(ngModel)]="email"
+               #emailRef="ngModel"
+               class="w-full bg-[#011F2F] text-white pl-10 py-2 rounded-full shadow-inner outline-none placeholder-gray-400"
+               placeholder="Enter your email">
+        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-white pointer-events-none">📧</span>
+        <div *ngIf="emailRef.invalid && emailRef.touched" class="text-red-500 text-xs mt-1">Valid email is required.</div>
       </div>
-  
+
       <!-- Password Section -->
       <label class="text-white block mb-1" for="password">Password</label>
       <div class="relative mb-6">
-        <input id="password" type="password" class="w-full bg-[#011F2F] text-white pl-10 py-2 rounded-full shadow-inner outline-none placeholder-gray-400" placeholder="Enter your password">
-        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-white pointer-events-none">
-          🔒
-        </span>
+        <input id="password"
+               name="password"
+               type="password"
+               required
+               minlength="6"
+               autocomplete="off"
+               (paste)="$event.preventDefault()"
+               [(ngModel)]="password"
+               #passwordRef="ngModel"
+               class="w-full bg-[#011F2F] text-white pl-10 py-2 rounded-full shadow-inner outline-none placeholder-gray-400"
+               placeholder="Enter your password">
+        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-white pointer-events-none">🔒</span>
+        <div *ngIf="passwordRef.invalid && passwordRef.touched" class="text-red-500 text-xs mt-1">Password is required (min 6 characters).</div>
       </div>
-  
+
       <!-- Remember Me and Forgot Password -->
       <div class="flex items-center justify-between text-white text-sm mb-6">
         <label class="flex items-center">
@@ -29,24 +47,19 @@
           Remember me
         </label>
       </div>
-  
+
       <!-- Login Button -->
-      <button class="w-full bg-[#011F2F] text-white py-2 rounded-full shadow-[4px_4px_8px_#000,_-4px_-4px_8px_#0a2a3f] hover:bg-[#022b3a] transition mb-4">
+      <button type="submit" class="w-full bg-[#011F2F] text-white py-2 rounded-full shadow-[4px_4px_8px_#000,_-4px_-4px_8px_#0a2a3f] hover:bg-[#022b3a] transition mb-4">
         Login
       </button>
-  
+      
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="text-red-400 text-sm text-center mt-2">{{ errorMessage }}</div>
+      
       <!-- Forgot Password Link -->
       <div class="text-center">
         <a href="#" class="text-white text-sm underline hover:text-gray-300">Forgot Password?</a>
       </div>
-    </div>
+    </form>
   </div>
-  
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inknut Antiqua', serif;
-    }
-  </style>
-  
+</div>

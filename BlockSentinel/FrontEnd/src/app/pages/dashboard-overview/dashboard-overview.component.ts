@@ -32,14 +32,17 @@ export class DashboardOverviewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.systemService.getRegisteredSystems().subscribe((data) => {
-      this.systems = data;
+    this.systemService.getRegisteredSystems().subscribe({
+      next: (data) => this.systems = data,
+      error: (err) => console.error('Error fetching systems:', err)
     });
-    
-    this.transactionService.getTransaction().subscribe((data) => {
-      this.transaction = data;
+  
+    this.transactionService.getTransaction().subscribe({
+      next: (data) => this.transaction = data,
+      error: (err) => console.error('Error fetching transactions:', err)
     });
   }
+  
 
   toggleMenu(id: string): void {
     this.openMenu = this.openMenu === id ? null : id;
