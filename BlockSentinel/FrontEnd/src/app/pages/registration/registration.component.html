@@ -1,108 +1,188 @@
-<!-- registration.component.html -->
-
 <div class="bg-[#011F2F] p-6 rounded-lg text-white w-full shadow-md overflow-y-auto h-screen">
 
-    <!-- Heading -->
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-semibold">System Registration</h2>
-    </div>
-  
-    <!-- Row 1: System Name + Profile Photo -->
-    <div class="flex flex-wrap justify-between items-start mb-6">
-      <!-- System Name -->
-      <div class="w-full md:w-1/2 pr-0 md:pr-4 mb-4 md:mb-0">
-        <label class="block mb-2">System Name</label>
-        <div class="relative">
-          <i class="fas fa-server absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-          <input type="text" [(ngModel)]="systemName"
-                 class="w-full pl-10 pr-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
-        </div>
-      </div>
-  
-      <!-- Profile Photo -->
-      <div class="w-full md:w-1/2 flex flex-col items-center">
-        <div class="w-32 h-32 rounded-full overflow-hidden border-2 border-[#0E8CCF] bg-gray-800">
-          <img *ngIf="systemImage" [src]="systemImage" class="object-cover w-full h-full" />
-          <span *ngIf="!systemImage" class="flex items-center justify-center h-full text-gray-400">No Image</span>
-        </div>
-        <label class="mt-2 text-sm cursor-pointer text-[#0E8CCF] hover:underline">
-          Add System Profile Photo
-          <input type="file" hidden (change)="onImageUpload($event)">
-        </label>
-      </div>
-    </div>
-  
-    <!-- Row 2: System URL + Data Type -->
-    <div class="flex flex-wrap justify-between mb-6">
-      <!-- System URL -->
-      <div class="w-full md:w-1/2 pr-0 md:pr-4 mb-4 md:mb-0">
-        <label class="block mb-2">System URL</label>
-        <div class="relative">
-          <i class="fas fa-link absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-          <input type="text"  [(ngModel)]="systemUrl"
-                 class="w-full pl-10 pr-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
-        </div>
-      </div>
-  
-      <!-- Data Type -->
-      <div class="w-full md:w-1/2 pl-0 md:pl-4">
-        <label class="block mb-2">Data Type to be Protected</label>
-        <select [(ngModel)]="selectedDataType" class="w-full px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
-          <option value="">-- Select Data Type --</option>
-          <option *ngFor="let type of dataTypes" [value]="type">{{ type }}</option>
-        </select>
-      </div>
-    </div>
-  
-    <!-- Row 3: System Type + System ID -->
-    <div class="flex flex-wrap justify-between mb-6">
-      <!-- System Type -->
-      <div class="w-full md:w-1/2 pr-0 md:pr-4 mb-4 md:mb-0">
-        <label class="block mb-2">System Type</label>
-        <select [(ngModel)]="selectedSystemType" class="w-full px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
-          <option value="">-- Select System Type --</option>
-          <option *ngFor="let type of systemTypes" [value]="type">{{ type }}</option>
-        </select>
-      </div>
-  
-      <!-- System ID -->
-      <div class="w-full md:w-1/2 pl-0 md:pl-4">
-        <label class="block mb-2">System ID</label>
-        <input type="text" [value]="systemId" readonly
-               class="w-full px-4 py-2 rounded-md bg-[#00121C] text-gray-400 focus:outline-none cursor-not-allowed">
-      </div>
-    </div>
-  
-    <!-- Row 4: Admin Count -->
-    <div class="mb-6">
-      <label class="block mb-2">How many admins does the system have?</label>
-      <input type="number" min="1" [(ngModel)]="adminCount" (input)="generateAdminFields()"
-             class="w-1/3 px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
-    </div>
-  
-    <!-- Row 5: Admin Pairs -->
-    <div class="space-y-4 mb-6">
-      <div *ngFor="let admin of adminFields; let i = index" class="flex flex-wrap justify-between">
-        <div class="w-full md:w-1/2 pr-0 md:pr-4 mb-4 md:mb-0">
-          <label class="block mb-2">Admin{{ adminFields.length > 1 ? ' ' + (i + 1) : '' }} Name</label>
-          <input type="text" [(ngModel)]="admin.name"
-                 class="w-full px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
-        </div>
-        <div class="w-full md:w-1/2 pl-0 md:pl-4">
-          <label class="block mb-2">Admin{{ adminFields.length > 1 ? ' ' + (i + 1) : '' }} Email</label>
-          <input type="email" [(ngModel)]="admin.email"
-                 class="w-full px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
-        </div>
-      </div>
-    </div>
-  
-    <!-- Submit Button -->
-    <div class="text-right">
-      <button (click)="submitRegistration()"
-              class="bg-[#0E8CCF] hover:bg-[#0A6A9F] transition px-6 py-2 rounded-md text-white font-semibold shadow-md">
-        <i class="fas fa-paper-plane mr-2"></i> Register
-      </button>
-    </div>
-  
+  <!-- Heading -->
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-semibold">System Registration</h2>
   </div>
-  
+
+  <!-- Row 1: System Name + Profile Photo -->
+  <div class="flex flex-wrap justify-between items-start mb-6">
+    <!-- System Name -->
+    <div class="w-full md:w-1/2 pr-0 md:pr-4 mb-4 md:mb-0">
+      <label class="block mb-2">System Name</label>
+      <div class="relative">
+        <i class="fas fa-server absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        <input autocomplete="off" type="text" [(ngModel)]="systemName"
+               class="w-full pl-10 pr-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
+      </div>
+    </div>
+
+    <!-- Profile Photo -->
+    <div class="w-full md:w-1/2 flex flex-col items-center">
+      <div class="w-32 h-32 rounded-full overflow-hidden border-2 border-[#0E8CCF] bg-gray-800">
+        <img *ngIf="systemImage" [src]="systemImage" class="object-cover w-full h-full" />
+        <span *ngIf="!systemImage" class="flex items-center justify-center h-full text-gray-400">No Image</span>
+      </div>
+      <label class="mt-2 text-sm cursor-pointer text-[#0E8CCF] hover:underline">
+        Add System Profile Photo
+        <input type="file" hidden (change)="onImageUpload($event)">
+      </label>
+    </div>
+  </div>
+
+  <!-- Row 2: System URL + Data Type -->
+  <div class="flex flex-wrap justify-between mb-6">
+    <!-- System URL -->
+    <div class="w-full md:w-1/2 pr-0 md:pr-4 mb-4 md:mb-0">
+      <label class="block mb-2">System URL</label>
+      <div class="relative">
+        <i class="fas fa-link absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        <input autocomplete="off" type="text"  [(ngModel)]="systemUrl"
+               class="w-full pl-10 pr-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
+      </div>
+    </div>
+
+    <!-- Data Type -->
+    <div class="w-full md:w-1/2 pl-0 md:pl-4">
+      <label class="block mb-2">Data Type to be Protected</label>
+      <select [(ngModel)]="selectedDataType" class="w-full px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
+        <option value="">-- Select Data Type --</option>
+        <option *ngFor="let type of dataTypes" [value]="type">{{ type }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Row 3: System Type + System ID -->
+  <div class="flex flex-wrap justify-between mb-6">
+    <!-- System Type -->
+    <div class="w-full md:w-1/2 pr-0 md:pr-4 mb-4 md:mb-0">
+      <label class="block mb-2">System Type</label>
+      <select [(ngModel)]="selectedSystemType" class="w-full px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
+        <option value="">-- Select System Type --</option>
+        <option *ngFor="let type of systemTypes" [value]="type">{{ type }}</option>
+      </select>
+    </div>
+
+    <!-- System ID (readonly) -->
+    <div class="w-full md:w-1/2 pl-0 md:pl-4">
+      <label class="block mb-2">System ID</label>
+      <input type="text" [value]="systemId" readonly
+             class="w-full px-4 py-2 rounded-md bg-[#00293C] text-gray-400 cursor-not-allowed">
+    </div>
+  </div>
+
+  <!-- Row 4: Number of Admins + Dynamic Admin Fields -->
+  <div class="mb-6">
+    <label class="block mb-2">Number of System Admins</label>
+    <input autocomplete="off" type="number" min="1" max="5" [(ngModel)]="adminCount"
+           (change)="generateAdminFields()"
+           class="w-20 px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
+  </div>
+
+  <div *ngFor="let admin of adminFields; let i = index" class="mb-4">
+    <h3 class="font-semibold mb-2 text-[#0E8CCF]">Admin {{ i + 1 }}</h3>
+    <input autocomplete="off" type="text" [(ngModel)]="admin.name" placeholder="Name"
+           class="block w-full mb-2 px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
+    <input autocomplete="off" type="email" [(ngModel)]="admin.email" placeholder="Email"
+           class="block w-full px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]">
+  </div>
+
+  <!-- Submit Button -->
+  <button [disabled]="isRegistering"
+          (click)="submitRegistration()"
+          class="bg-[#0E8CCF] hover:bg-[#0A6A9F] transition px-6 py-2 rounded-md text-white font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
+    <i class="fas fa-paper-plane mr-2"></i> Register
+  </button>
+
+  <!-- Modal -->
+  <div *ngIf="showProgressModal" class="fixed inset-0 bg-[#00000090] backdrop-blur-sm  flex items-center justify-center z-50">
+    <div class="relative bg-[#022A40] p-6 rounded-lg max-w-lg w-full text-white shadow-lg overflow-y-auto max-h-[80vh]">
+
+      <!-- Close Button -->
+      <button (click)="closeModal()"
+              class="absolute top-3 right-3 text-gray-400 hover:text-white text-2xl font-bold focus:outline-none">
+        &times;
+      </button>
+
+      <!-- Step: progress -->
+      <div *ngIf="step === 'progress'">
+        <h3 class="text-lg font-semibold mb-4">Progress</h3>
+        <p>{{ progressMessage }}</p>
+        <div class="w-full bg-gray-700 rounded-full h-4 mt-4">
+          <div class="bg-[#0E8CCF] h-4 rounded-full transition-all duration-300" [style.width.%]="progressValue"></div>
+        </div>
+      </div>
+
+      <!-- Step: selectDb -->
+      <!-- Assume discoveredDbTypes is already loaded -->
+<div *ngFor="let db of discoveredDatabases">
+  <button (click)="onDbTypeSelected(db.type)">{{ db.type }}</button>
+</div>
+
+<div *ngIf="selectedDbType">
+  <h3>Enter Credentials for {{ selectedDbType }}</h3>
+  <input [(ngModel)]="credentials.host" placeholder="Host" />
+  <input [(ngModel)]="credentials.port" placeholder="Port" />
+  <input [(ngModel)]="credentials.user" placeholder="Username" />
+  <input [(ngModel)]="credentials.password" placeholder="Password" type="password" />
+  <button (click)="submitCredentials()">Fetch DB Names</button>
+</div>
+
+<div *ngIf="dbNames.length > 0">
+  <h4>Discovered Databases:</h4>
+  <ul>
+    <li *ngFor="let name of dbNames">{{ name }}</li>
+  </ul>
+</div>
+
+        <ul>
+          <li *ngFor="let db of discoveredDatabases" class="database-item">
+            <!-- Use sanitized id if binding to attribute -->
+            <input
+              type="checkbox"
+              [id]="sanitizeId(db.name)"
+              [value]="db.name"
+              [(ngModel)]="selectedDatabase"
+            />
+            <label [for]="sanitizeId(db.name)">
+              {{ db.name }} ({{ db.type }})
+            </label>
+          </li>
+        </ul>
+        
+      </div>
+
+      <!-- Step: enterCredentials -->
+      <div *ngIf="step === 'enterCredentials'">
+        <h3 class="text-lg font-semibold mb-4">Enter Database Credentials for "{{ selectedDatabase }}"</h3>
+
+        <input autocomplete="off" [(ngModel)]="dbCredentials.host" placeholder="Host"
+               class="block w-full mb-2 px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" />
+        <input autocomplete="off" [(ngModel)]="dbCredentials.port" placeholder="Port"
+               class="block w-full mb-2 px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" />
+        <input autocomplete="off" [(ngModel)]="dbCredentials.username" placeholder="Username"
+               class="block w-full mb-2 px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" />
+        <input autocomplete="off" [(ngModel)]="dbCredentials.password" type="password" placeholder="Password"
+               class="block w-full mb-2 px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" />
+        <input autocomplete="off" [(ngModel)]="dbCredentials.extra" placeholder="Extra (optional)"
+               class="block w-full mb-4 px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" />
+
+        <div class="flex justify-end">
+          <button (click)="step='selectDb'" 
+                  class="mr-4 bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed">
+            Back
+          </button>
+
+          <button (click)="submitDbCredentials()" 
+                  [disabled]="isDiscoveringDatabases"
+                  class="bg-[#0E8CCF] hover:bg-[#0A6A9F] px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed">
+            <span *ngIf="!isDiscoveringDatabases">Submit</span>
+            <span *ngIf="isDiscoveringDatabases"><i class="fas fa-spinner fa-spin"></i> Submitting...</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
