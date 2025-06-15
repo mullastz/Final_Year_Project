@@ -1,17 +1,26 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { DataRecord } from '../../interface/data-record';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DataRecordService {
-  private jsonURL = 'http://localhost:3004/data-record';
-
   constructor(private http: HttpClient) {}
 
-  getDataRecords(): Observable<DataRecord[]> {
-    return this.http.get<DataRecord[]>(this.jsonURL);
+  getDataRecords(sysId: string): Observable<DataRecord[]> {
+    return this.http.get<any>(`http://localhost:8000/reg/api/system/${sysId}/ledger/summary/`).pipe(
+      map(response => (response.data || []).map((item: any) => ({
+        batchId: item.table_id,
+        description: item.description,
+        total: item.total_rows,
+        date: new Date(item.timestamp).toLocaleDateString(),
+        time: new Date(item.timestamp).toLocaleTimeString(),
+        ledgerHash: item.ledger_hash
+      })))
+    );
   }
+  
+  
+  
 }

@@ -1,6 +1,6 @@
 # serializers.py
 
-from rest_framework import serializers
+from rest_framework import serializers # type: ignore
 from .models import RegisteredSystem, SystemAdmin
 
 class SystemAdminSerializer(serializers.ModelSerializer):

@@ -1,0 +1,15 @@
+.container {
+    max-width: 500px;
+    margin: auto;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  label {
+    display: block;
+    margin-top: 10px;
+  }
+  button {
+    margin-top: 15px;
+  }
+  

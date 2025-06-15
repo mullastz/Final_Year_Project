@@ -113,76 +113,73 @@
         </div>
       </div>
 
-      <!-- Step: selectDb -->
-      <!-- Assume discoveredDbTypes is already loaded -->
-<div *ngFor="let db of discoveredDatabases">
-  <button (click)="onDbTypeSelected(db.type)">{{ db.type }}</button>
+      <!-- Step 1: Display discovered database types -->
+<div *ngIf="discoveredDbTypes.length > 0 && !selectedDbType">
+  <h3>Select Database Type</h3>
+  <div *ngFor="let dbType of discoveredDbTypes">
+    <button (click)="onSelectDbType(dbType.type)" class="db-type-button bg-[#0E8CCF] ">
+      {{ dbType.type }}
+    </button>
+  </div>
 </div>
 
-<div *ngIf="selectedDbType">
+<!-- Step 2: Credential Form -->
+<div *ngIf="selectedDbType && !databaseNames.length">
   <h3>Enter Credentials for {{ selectedDbType }}</h3>
-  <input [(ngModel)]="credentials.host" placeholder="Host" />
-  <input [(ngModel)]="credentials.port" placeholder="Port" />
-  <input [(ngModel)]="credentials.user" placeholder="Username" />
-  <input [(ngModel)]="credentials.password" placeholder="Password" type="password" />
-  <button (click)="submitCredentials()">Fetch DB Names</button>
-</div>
-
-<div *ngIf="dbNames.length > 0">
-  <h4>Discovered Databases:</h4>
-  <ul>
-    <li *ngFor="let name of dbNames">{{ name }}</li>
-  </ul>
-</div>
-
-        <ul>
-          <li *ngFor="let db of discoveredDatabases" class="database-item">
-            <!-- Use sanitized id if binding to attribute -->
-            <input
-              type="checkbox"
-              [id]="sanitizeId(db.name)"
-              [value]="db.name"
-              [(ngModel)]="selectedDatabase"
-            />
-            <label [for]="sanitizeId(db.name)">
-              {{ db.name }} ({{ db.type }})
-            </label>
-          </li>
-        </ul>
-        
-      </div>
-
-      <!-- Step: enterCredentials -->
-      <div *ngIf="step === 'enterCredentials'">
-        <h3 class="text-lg font-semibold mb-4">Enter Database Credentials for "{{ selectedDatabase }}"</h3>
-
-        <input autocomplete="off" [(ngModel)]="dbCredentials.host" placeholder="Host"
-               class="block w-full mb-2 px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" />
-        <input autocomplete="off" [(ngModel)]="dbCredentials.port" placeholder="Port"
-               class="block w-full mb-2 px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" />
-        <input autocomplete="off" [(ngModel)]="dbCredentials.username" placeholder="Username"
-               class="block w-full mb-2 px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" />
-        <input autocomplete="off" [(ngModel)]="dbCredentials.password" type="password" placeholder="Password"
-               class="block w-full mb-2 px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" />
-        <input autocomplete="off" [(ngModel)]="dbCredentials.extra" placeholder="Extra (optional)"
-               class="block w-full mb-4 px-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" />
-
-        <div class="flex justify-end">
-          <button (click)="step='selectDb'" 
-                  class="mr-4 bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed">
-            Back
-          </button>
-
-          <button (click)="submitDbCredentials()" 
-                  [disabled]="isDiscoveringDatabases"
-                  class="bg-[#0E8CCF] hover:bg-[#0A6A9F] px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed">
-            <span *ngIf="!isDiscoveringDatabases">Submit</span>
-            <span *ngIf="isDiscoveringDatabases"><i class="fas fa-spinner fa-spin"></i> Submitting...</span>
-          </button>
-        </div>
-      </div>
-
+  <form class=" mb-6 " (ngSubmit)="fetchDatabases()" #credForm="ngForm">
+    <div >
+      <label for="host">Host:</label>
+      <input class="w-full pl-10 pr-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" id="host" type="text" name="host" [(ngModel)]="credentials.host" required />
     </div>
+    <div>
+      <label for="port">Port:</label>
+      <input class="w-full pl-10 pr-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" id="port" type="number" name="port" [(ngModel)]="credentials.port" required min="1"
+      max="65535" />
+    </div>
+    <div>
+      <label for="user">Username:</label>
+      <input class="w-full pl-10 pr-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" id="user" type="text" name="user" [(ngModel)]="credentials.user" required />
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input class="w-full pl-10 pr-4 py-2 rounded-md bg-[#00121C] text-white focus:outline-none focus:ring-2 focus:ring-[#0E8CCF]" id="password" type="password" name="password" [(ngModel)]="credentials.password" required />
+    </div>
+
+    <button class="bg-[#0E8CCF] p-2 rounded-md " type="submit" [disabled]="loadingDbNames">Connect</button>
+  </form>
+
+  <div *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</div>
+</div>
+
+<!-- Step 3: Show database names to secure -->
+<div *ngIf="databaseNames.length > 0">
+  <h3>Select Database(s) to Secure</h3>
+  <form (ngSubmit)="handleDbSubmission()">
+    <div *ngFor="let dbName of databaseNames">
+      <label>
+        <input type="checkbox" [value]="dbName" (change)="onDatabaseSelectionChange(dbName, $event)" />
+        {{ dbName }}
+      </label>
+    </div>
+
+    <button class="bg-[#0E8CCF] p-2 rounded-md" type="submit">Secure</button>
+  </form>
+</div>
+
+<div *ngIf="securityComplete" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+    <h2 class="text-2xl font-semibold text-green-600 mb-4">System Secured!</h2>
+    <p class="text-gray-700 mb-6">Your system has been successfully secured.</p>
+    <button
+      (click)="goToManagement()"
+      class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-all duration-200"
+    >
+      Okay
+    </button>
+  </div>
+</div>
+
+
   </div>
 
 

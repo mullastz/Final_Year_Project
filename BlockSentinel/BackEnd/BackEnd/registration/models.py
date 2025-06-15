@@ -1,6 +1,6 @@
 # models.py
 
-from django.db import models
+from django.db import models # type: ignore
 import uuid
 
 

@@ -20,12 +20,20 @@ import { Router } from '@angular/router';
   styleUrls: ['./system-detail.component.css']
 })
 export class SystemDetailComponent implements OnInit {
-  system!: RegisteredSystem;
+  system: RegisteredSystem | null = null;
   alertNotifications: Alert[] = [];
   dataRecords: DataRecord[] = [];
 
   showDownloadDropdown = false;
   showFilterDropdown = false;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private systemService: SystemService,
+    private alertService: AlertService,
+    private dataRecordService: DataRecordService
+  ) {}
 
   toggleDownloadDropdown() {
     this.showDownloadDropdown = !this.showDownloadDropdown;
@@ -38,28 +46,44 @@ export class SystemDetailComponent implements OnInit {
   goToLedgerDetail(systemId: string, batchId: string) {
     this.router.navigate(['/dashboard-pages/ledger-detail', systemId, batchId]);
   }
-  
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private systemService: SystemService,
-    private alertService: AlertService,
-    private dataRecordService: DataRecordService
-  ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    this.systemService.getSystemById(id!).subscribe((data) => {
-      this.system = data;
+    if (!id) return;
+
+    // Fetch system details
+    this.systemService.getSystemById(id).subscribe({
+      next: (data) => {
+        this.system = data;
+      },
+      error: (err) => {
+        console.error('[System] Failed to fetch system:', err);
+        this.system = null;
+      }
     });
 
-    this.alertService.getAlerts().subscribe((alerts: Alert[]) => {
-      this.alertNotifications = alerts.filter(alert => alert.systemId === id);
+    // Fetch alerts (ignore CORS error if it fails)
+    this.alertService.getAlerts().subscribe({
+      next: (alerts: Alert[]) => {
+        this.alertNotifications = alerts.filter(alert => alert.systemId === id);
+      },
+      error: (err) => {
+        console.warn('[Alert] Failed to fetch alerts (expected if using mock):', err);
+        this.alertNotifications = [];  // fallback to empty
+      }
     });
 
-    this.dataRecordService.getDataRecords().subscribe((records: DataRecord[]) => {
-      this.dataRecords = records.filter(record => record.systemId === id);
+    // Fetch data records (this must not fail silently)
+    this.dataRecordService.getDataRecords(id).subscribe({
+      next: (records: DataRecord[]) => {
+        console.log('[DataRecord] Fetched records:', records);
+        this.dataRecords = records || [];
+      },
+      error: (err) => {
+        console.error('[DataRecord] Failed to fetch records:', err);
+        this.dataRecords = [];
+      }
     });
-
+    
   }
 }

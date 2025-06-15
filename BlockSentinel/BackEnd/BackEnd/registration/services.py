@@ -1,7 +1,17 @@
+from typing import List
+import mysql
+import psycopg2
+from pymongo import MongoClient
 import requests
 import socket
 from requests.exceptions import RequestException
 from .data_extraction_engine import extract_data
+from blockchain.blockchain_client import  get_table_data, get_all_tables_for_system
+import json
+import uuid
+import re
+from datetime import datetime
+
 
 def install_agent(system_url: str) -> bool:
     """
@@ -18,26 +28,24 @@ def install_agent(system_url: str) -> bool:
         return False
 
 def discover_databases(system_url: str) -> list:
-    """
-    Tries to fetch list of databases from the agent.
-    Returns a list of databases if successful, else empty list.
-    """
     try:
         response = requests.get(f"{system_url}/discover-databases", timeout=5)
         response.raise_for_status()
         data = response.json()
         databases = data.get('databases', [])
-        print(f"[INFO] Discovered databases at {system_url}: {databases}")
+        # Normalize to list of strings (types only)
+        if databases and isinstance(databases[0], dict):
+            databases = [db.get("type") or db.get("name") for db in databases]
+        print(f"[INFO] Discovered database types at {system_url}: {databases}")
         return databases
-    except RequestException as e:
+    except RequestException:
         print(f"[WARN] discover-databases endpoint not available, falling back to port scan.")
-        # Extract IP from system_url (strip http:// and port)
         ip = system_url.split("//")[-1].split(":")[0]
         fallback_dbs = scan_common_db_ports(ip)
         print(f"[INFO] Discovered via port scan: {fallback_dbs}")
         return fallback_dbs
 
-def scan_common_db_ports(ip: str):
+def scan_common_db_ports(ip: str) -> list:
     known_ports = {
         3306: 'MySQL',
         5432: 'PostgreSQL',
@@ -50,57 +58,65 @@ def scan_common_db_ports(ip: str):
             s.settimeout(1)
             try:
                 s.connect((ip, port))
-                discovered.append({"name": f"unknown_{db_type.lower()}_{port}", "type": db_type})
+                discovered.append(db_type)  # Just the type
             except Exception:
                 continue
     return discovered
 
-def fetch_db_names(db_type: str, credentials: dict) -> list:
-    """
-    Connects using provided credentials and fetches actual DB names.
-    """
+
+def fetch_database_names(ip_address: str, db_type: str, credentials: dict) -> List[str]:
     try:
-        if db_type == "PostgreSQL":
-            import psycopg2
-            conn = psycopg2.connect(**credentials)
+        if db_type == 'PostgreSQL':
+            conn = psycopg2.connect(
+                host=credentials['host'],
+                port=credentials['port'],
+                user=credentials['user'],
+                password=credentials['password'],
+                connect_timeout=5
+            )
+            conn.autocommit = True
             cur = conn.cursor()
             cur.execute("SELECT datname FROM pg_database WHERE datistemplate = false;")
-            return [row[0] for row in cur.fetchall()]
-        elif db_type == "MySQL":
-            import mysql.connector
-            conn = mysql.connector.connect(**credentials)
-            cur = conn.cursor()
-            cur.execute("SHOW DATABASES")
-            return [db[0] for db in cur.fetchall()]
-        elif db_type == "MongoDB":
-            from pymongo import MongoClient
-            client = MongoClient(credentials['uri'])
-            return client.list_database_names()
-        elif db_type == "Oracle":
-            import cx_Oracle
-            dsn = cx_Oracle.makedsn(credentials['host'], credentials['port'], sid=credentials['sid'])
-            conn = cx_Oracle.connect(credentials['user'], credentials['password'], dsn)
-            cur = conn.cursor()
-            cur.execute("SELECT username FROM all_users")
-            return [row[0] for row in cur.fetchall()]
-        elif db_type == "SQLite":
-            # Single DB in SQLite
-            return ["default"]
+            dbs = [row[0] for row in cur.fetchall()]
+            cur.close()
+            conn.close()
+            return dbs
+
+        elif db_type == 'MySQL':
+            conn = mysql.connector.connect(
+                host=credentials['host'],
+                port=credentials['port'],
+                user=credentials['user'],
+                password=credentials['password'],
+                connection_timeout=5
+            )
+            cursor = conn.cursor()
+            cursor.execute("SHOW DATABASES;")
+            dbs = [row[0] for row in cursor.fetchall()]
+            cursor.close()
+            conn.close()
+            return dbs
+
+        elif db_type == 'MongoDB':
+            client = MongoClient(
+                host=credentials['host'],
+                port=int(credentials['port']),
+                username=credentials['user'],
+                password=credentials['password'],
+                serverSelectionTimeoutMS=5000
+            )
+            dbs = client.list_database_names()
+            client.close()
+            return dbs
+
         else:
-            raise ValueError("Unsupported DB type")
+            return []
+
     except Exception as e:
-        print(f"[ERROR] Failed to fetch DB names: {e}")
+        print(f"Error fetching DBs: {e}")
         return []
 
-
-def extract_data_from_system(system_url: str, databases: list, credentials_map: dict):
-    """
-    For each discovered database, extract schema and data using correct extractor.
-    Returns a dict of { db_name: { table_name: [data], ... }, ... }
-    
-    - `databases`: list of dicts like {name: 'employees_db', type: 'PostgreSQL'}
-    - `credentials_map`: dict mapping db_name -> connection_info (username, password, host, etc.)
-    """
+def extract_data_from_system(system_url: str, databases: list, credentials_map: dict, system_id: str):
     all_data = {}
 
     for db in databases:
@@ -108,18 +124,117 @@ def extract_data_from_system(system_url: str, databases: list, credentials_map: 
         db_type = db['type']
 
         if db_name not in credentials_map:
-            print(f"[WARN] No credentials provided for {db_name}. Skipping.")
+            print(f"[WARN] No credentials for {db_name}. Skipping.")
             continue
 
         try:
             print(f"[INFO] Extracting from {db_type} database: {db_name}")
             connection_info = credentials_map[db_name]
-            extracted = extract_data(db_type, connection_info)
-            all_data[db_name] = extracted
+
+            result = extract_data(db_type, connection_info, system_id=system_id, db_name=db_name)
+
+            for sys_id, sys_data in result.items():
+                if sys_id not in all_data:
+                    all_data[sys_id] = {}
+
+                all_data[sys_id].update(sys_data)
+
         except Exception as e:
-            print(f"[ERROR] Failed extracting from {db_name}: {e}")
+            print(f"[ERROR] Extraction failed for {db_name}: {e}")
 
     return all_data
+
+def get_ledger_data(system_id: str):
+    """
+    Fetch stored ledger data from blockchain for a given system.
+    Returns parsed list of table snapshots.
+    """
+    try:
+        data = get_all_tables_for_system(system_id)
+        return data
+    except Exception as e:
+        print(f"[ERROR] Failed to retrieve ledger data: {e}")
+        return None
+
+
+def generate_table_summaries(sys_id):
+    """
+    Converts raw ledger data into per-table summaries for frontend display.
+    """
+    all_ledger = get_all_tables_for_system(sys_id)
+    if not all_ledger:
+        return []
+
+    table_summaries = []
+    batch_table_counts = {}
+
+    for ledger in all_ledger:
+        batch_id = ledger["batch_id"]
+        table_name = ledger["table_name"]
+        timestamp = ledger["timestamp"]
+        ledger_hash = ledger["ledger_hash"]
+        total_rows = len(ledger.get("rows", []))
+
+        # Create a unique table ID per batch
+        count = batch_table_counts.get(batch_id, 0) + 1
+        batch_table_counts[batch_id] = count
+        table_id = f"{batch_id}-{count:03d}"
+
+        table_summaries.append({
+            "table_id": table_id,
+            "description": table_name,
+            "total_rows": total_rows,
+            "timestamp": timestamp,
+            "ledger_hash": ledger_hash
+        })
+
+    return table_summaries
+
+def get_ledger_data(system_id: str, db_name: str, table_key: str):
+    """
+    Fetch stored ledger data from blockchain for a given system.
+    Returns parsed JSON.
+    """
+    try:
+        data = get_table_data(system_id, db_name, table_key)
+        return data
+    except Exception as e:
+        print(f"[ERROR] Failed to retrieve ledger data: {e}")
+        return None
+
+def get_table_data_by_table_id(sys_id, table_id):
+    """
+    Given a system ID and a specific table_id (like 'abc123-001'),
+    returns the full data (columns + rows) for that table.
+    """
+    match = re.match(r"^(.*)-(\d{3})$", table_id)
+    if not match:
+        raise ValueError("Invalid table_id format")
+
+    batch_id_prefix, table_index_str = match.groups()
+    table_index = int(table_index_str) - 1  # index in 0-based list
+
+    all_ledger = get_ledger_data(sys_id)
+    target_ledger = next((l for l in all_ledger if l["batch_id"] == batch_id_prefix), None)
+
+    if not target_ledger:
+        raise ValueError(f"Batch ID {batch_id_prefix} not found")
+
+    data = target_ledger["data"]
+    table_names = list(data.keys())
+
+    if table_index >= len(table_names):
+        raise ValueError("Table index out of range")
+
+    table_name = table_names[table_index]
+    table_data = data[table_name]
+
+    return {
+        "table_name": table_name,
+        "columns": table_data.get("columns", []),
+        "rows": table_data.get("rows", [])
+    }
+
 
 def install_agent(system_url):
     # Logic to SSH or make HTTP request to remote system

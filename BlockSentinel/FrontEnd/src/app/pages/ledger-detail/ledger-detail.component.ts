@@ -21,7 +21,8 @@ export class LedgerDetailComponent implements OnInit {
   ngOnInit(): void {
     const systemId = this.route.snapshot.paramMap.get('systemId')!;
     const batchId = this.route.snapshot.paramMap.get('batchId')!;
-    this.ledgerService.getLedgerBySystemAndBatch(systemId, batchId).subscribe(data => {
+    
+    this.ledgerService.getLedgerBySystemAndBatch(systemId, batchId).then((data) => {
       if (data) this.ledger = data;
     });
   }

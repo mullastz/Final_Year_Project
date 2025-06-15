@@ -1,6 +1,6 @@
 
-<div class="text-white p-6 max-w-6xl mx-auto px-4">
-    <!-- Header -->
+<div *ngIf="system" class="text-white p-6 max-w-6xl mx-auto px-4">
+      <!-- Header -->
     <div class="flex items-center mb-6">
       <img [src]="system.logoUrl" class="w-16 h-16 rounded-full mr-4" />
       <h2 class="text-2xl font-bold">{{ system.name }}</h2>
@@ -44,7 +44,7 @@
     </div>
 
      <!-- Section 3: Alert Notification -->
-<div *ngIf="alertNotifications.length > 0" class="mt-8">
+     <div *ngIf="alertNotifications && alertNotifications.length > 0" class="mt-8">
     <h3 class="text-lg font-semibold text-white mb-4">Alert Notification</h3>
   
     <div class="bg-[#011F2F] p-4 rounded-lg shadow-md w-full">

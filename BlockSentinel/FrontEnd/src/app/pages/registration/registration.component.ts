@@ -5,8 +5,14 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { RegistrationService } from '../../services/registration/registration.service';
+import { Router } from '@angular/router';
 
 type ModalStep = 'progress' | 'selectDb' | 'enterCredentials';
+interface DiscoveredDatabase {
+  name: string;
+  type: string;
+}
+
 
 @Component({
   selector: 'app-registration',
@@ -43,9 +49,10 @@ export class RegistrationComponent implements OnInit {
   step: ModalStep = 'progress';
 
   // Discovery & DB Selection
-  discoveredDatabases: { name: string; type: string }[] = [];
+  discoveredDbTypes: DiscoveredDatabase[] = [];
   selectedDatabase: string | null = null;
-  dbCredentials = { host: '', port: '', username: '', password: '', extra: '' };
+  selectedDatabases: Set<string> = new Set();
+  
 
   isRegistering = false;
   isInstallingAgent = false;
@@ -55,11 +62,28 @@ export class RegistrationComponent implements OnInit {
   selectedSystemId: string = '';
   selectedDisplayId: string = '';
 
-  constructor(private http: HttpClient, private registrationService: RegistrationService) {}
+  selectedDbType: string = '';
+  credentials = { host: '', port: '', user: '', password: '' };
+  databaseNames: string[] = [];
+
+// UI flags
+showCredentialForm = false;
+loadingDbNames = false;
+errorMessage = '';
+
+securityComplete = false;
+
+  constructor(private http: HttpClient, private registrationService: RegistrationService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     const fullId = uuidv4(); // generate UUID
     this.systemId = 'SYS-' + fullId.split('-')[0]; // format to SYS-xxxxxxx
+
+    this.registrationService.securityCompleted$.subscribe(status => {
+      this.securityComplete = status;
+    });
   }
 
   onImageUpload(event: any): void {
@@ -117,10 +141,89 @@ export class RegistrationComponent implements OnInit {
     });
   }
 
-  handleSuccessfulRegistration(response: any): void {
-    this.registeredSystem = response;
-    this.discoveredDatabases = response.discovered_databases || [];
+   // Example: after scanning system, set discoveredDbTypes
+   onDiscoveredDbTypes(dbName: string[]) {
+    this.discoveredDbTypes = dbName.map(dbType => ({ name: dbType, type: dbType }));
   }
+
+  onSelectDbType(dbName: string) {
+    this.selectedDbType = dbName;
+    this.showCredentialForm = true;
+    this.databaseNames = [];
+    this.selectedDatabase = null;
+    this.errorMessage = '';
+    // Reset credentials if needed
+    this.credentials = { host: '', port: '', user: '', password: '' };
+  }
+
+  fetchDatabases() {
+    this.loadingDbNames = true;
+    this.errorMessage = '';
+  
+    const ipAddress = this.systemUrl.split('//')[1].split(':')[0]; // Extract IP from URL
+  
+    this.registrationService.fetchDatabaseNames(this.selectedDbType, this.credentials, ipAddress)
+      .subscribe({
+        next: (res) => {
+          this.databaseNames = res.database_names || [];
+          this.loadingDbNames = false;
+          if (!this.databaseNames.length) {
+            this.errorMessage = 'No databases found.';
+          }
+        },
+        error: (err) => {
+          this.errorMessage = err.error?.error || 'Failed to fetch databases. Check your credentials.';
+          this.loadingDbNames = false;
+        }
+      });
+  }
+  
+  fetchDatabaseNames(): void {
+    this.loadingDbNames = true;
+    this.errorMessage = '';
+    this.databaseNames = [];
+  
+    const ipAddress = this.systemUrl.split('//')[1].split(':')[0]; // Extract IP from URL
+  
+    const payload = {
+      db_type: this.selectedDbType,
+      credentials: {
+        host: this.credentials.host,
+        port: this.credentials.port,
+        user: this.credentials.user,
+        password: this.credentials.password,
+      },
+      ip_address: ipAddress
+    };
+  
+    this.http.post<{ database_names: string[] }>('http://127.0.0.1:8000/reg/get-database-names/', payload).subscribe({
+      next: (res) => {
+        this.loadingDbNames = false;
+        this.databaseNames = res.database_names || [];
+  
+        if (this.databaseNames.length === 0) {
+          this.errorMessage = 'No databases found.';
+        }
+      },
+      error: (err) => {
+        this.loadingDbNames = false;
+        const detail = err?.error?.error || 'Failed to fetch databases. Check your credentials.';
+        this.errorMessage = detail;
+        console.error('Fetch DB names failed:', err);
+      }
+    });
+  }
+  
+
+  onSelectDatabase(dbName: string) {
+    this.selectedDatabase = dbName;
+  }
+
+  onDbTypeChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.onSelectDbType(target.value);
+  }
+  
 
   startAgentInstallation(): void {
     this.showProgressModal = true;
@@ -134,23 +237,22 @@ export class RegistrationComponent implements OnInit {
         this.progressMessage = 'Discovering databases...';
         this.isDiscoveringDatabases = true;
 
-        this.http.get<{ name: string; type: string }[]>(`http://127.0.0.1:8000/reg/discover-databases/?url=${this.systemUrl}`).subscribe({
-          next: (dbs) => {
-            this.progressValue = 100;
-            this.progressMessage = 'Discovery complete.';
-            this.discoveredDatabases = Array.isArray(dbs) ? dbs : Object.values(dbs);
-            this.step = 'selectDb';
-            this.isDiscoveringDatabases = false;
-          },
-          
-          error: (err) => {
-            this.progressMessage = 'Failed to discover databases.';
-            this.isDiscoveringDatabases = false;
-            const errorMsg = err?.error?.detail || 'Unknown error';
-            alert('Error discovering databases: ' + errorMsg);
-            console.error('DB Discovery failed:', err);
-          }
-        });
+        this.http.get<{ databases: string[] }>(`http://127.0.0.1:8000/reg/discover-databases/?url=${this.systemUrl}`)
+          .subscribe({
+            next: (res) => {
+              this.progressValue = 100;
+              this.progressMessage = 'Discovery complete.';
+              this.discoveredDbTypes = res.databases.map(type => ({ name: type, type }));
+              this.step = 'selectDb';
+              this.isDiscoveringDatabases = false;
+            },
+            error: (err) => {
+              this.loadingDbNames = false;
+              const detail = err?.error?.error || 'Failed to fetch databases. Check your credentials.';
+              this.errorMessage = detail;
+              console.error('Fetch DB names failed:', err);
+            }
+          });
       },
       error: (err) => {
         this.progressMessage = 'Agent installation failed.';
@@ -171,7 +273,7 @@ export class RegistrationComponent implements OnInit {
   }
   
   secureDatabases() {
-    const agentUrl = 'http://127.0.0.1:8000'; // Replace this with wherever you're storing the system URL
+    const agentUrl = this.systemUrl; // Replace this with wherever you're storing the system URL
     const dbList = Array.from(this.selectedDatabases).map(name => ({
       name,
       type: this.selectedDbType
@@ -182,15 +284,17 @@ export class RegistrationComponent implements OnInit {
       credentialsMap[dbName] = {
         host: this.credentials.host,
         port: this.credentials.port,
-        username: this.credentials.username,
-        password: this.credentials.password
+        user: this.credentials.user,
+        password: this.credentials.password,
+        database: dbName 
       };
     });
   
     const payload = {
       url: agentUrl,
       db_name: dbList,
-      credentials: credentialsMap
+      credentials: credentialsMap,
+      system_id: this.systemId
     };
   
     this.registrationService. extractData(payload).subscribe({
@@ -202,33 +306,43 @@ export class RegistrationComponent implements OnInit {
       }
     });
   }
+  
 
   handleSuccessfulRegistration(response: any): void {
     this.registeredSystem = response;
-    this.discoveredDbTypes = response.discovered_databases.map(
-      (db: DiscoveredDatabase) => db.type
-    );
+    this.discoveredDbTypes = response.discovered_databases
   }
+
   
-
- 
-
   submitDbCredentials(): void {
     if (!this.selectedDatabase) {
       alert('No database selected.');
       return;
     }
-
-    this.isDiscoveringDatabases = true;
-
+  
+    const dbName = this.selectedDatabase;
+    const dbType = this.selectedDbType;
+  
     const payload = {
       url: this.systemUrl,
-      databases: [this.selectedDatabase],
-      credentials_map: {
-        [this.selectedDatabase]: this.dbCredentials
-      }
+      db_name: [
+        {
+          name: dbName,
+          type: dbType
+        }
+      ],
+      credentials: {
+        [dbName]: {
+          host: this.credentials.host,
+          port: this.credentials.port,
+          user: this.credentials.user,
+          password: this.credentials.password,
+          database: dbName 
+        }
+      },
+      system_id: this.systemId
     };
-
+  
     this.http.post('http://127.0.0.1:8000/reg/extract-data/', payload).subscribe({
       next: (res) => {
         console.log('Data extraction started:', res);
@@ -245,11 +359,68 @@ export class RegistrationComponent implements OnInit {
     });
   }
 
+  handleDbSubmission(): void {
+    if (this.selectedDatabases.size === 0) {
+      alert('Please select at least one database.');
+      return;
+    }
+  
+    if (this.selectedDatabases.size === 1) {
+      // Extract the only selected db name
+      const dbName = Array.from(this.selectedDatabases)[0];
+  
+      const payload = {
+        url: this.systemUrl,
+        db_name: [
+          {
+            name: dbName,
+            type: this.selectedDbType
+          }
+        ],
+        credentials: {
+          [dbName]: {
+            host: this.credentials.host,
+            port: this.credentials.port,
+            user: this.credentials.user,
+            password: this.credentials.password,
+            database: dbName 
+          }
+        },
+        system_id: this.systemId
+      };
+  
+      this.http.post('http://127.0.0.1:8000/reg/extract-data/', payload).subscribe({
+        next: (res) => {
+          console.log('Data extraction started:', res);
+          this.isDiscoveringDatabases = false;
+          this.showProgressModal = false;
+          this.resetModalState();
+          alert('Data extraction initiated successfully.');
+        },
+        error: (err) => {
+          this.isDiscoveringDatabases = false;
+          console.error('Data extraction failed:', err);
+          alert('Failed to start data extraction.');
+        }
+      });
+  
+    } else {
+      // Multiple databases, use the existing secureDatabases logic
+      this.secureDatabases();
+    }
+  }
+  
+  
+  goToManagement() {
+    this.registrationService.resetSecurityStatus();
+    this.router.navigate(['/management']);
+  }
+ 
   resetModalState(): void {
     this.progressValue = 0;
     this.progressMessage = 'Installing Agent...';
     this.step = 'progress';
-    this.dbCredentials = { host: '', port: '', username: '', password: '', extra: '' };
+    this.credentials = { host: '', port: '', user: '', password: ''};
     this.selectedDatabase = null;
     this.isDiscoveringDatabases = false;
   }
