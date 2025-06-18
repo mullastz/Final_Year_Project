@@ -7,12 +7,13 @@ from .models import RegisteredSystem
 from rest_framework.parsers import MultiPartParser, FormParser
 import json
 import logging
-from .services import install_agent, discover_databases, extract_data_from_system, fetch_database_names, generate_table_summaries, get_table_data_by_table_id
+from .services import install_agent, discover_databases, extract_data_from_system, fetch_database_names, generate_table_summaries, get_table_data_by_table_id, fetch_table_data
 from blockchain.blockchain_client import store_table_data
 import uuid
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
+from datetime import datetime
 
 
 logger = logging.getLogger(__name__)  # optional logger for production use
@@ -147,6 +148,7 @@ class ExtractDataView(APIView):
 
         for sys_id, sys_data in all_data.items():
             batch_id = str(uuid.uuid4())
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # ✅ NEW
 
             for db_name, db_content in sys_data.items():
                 tables_data = db_content.get("data", {})
@@ -171,7 +173,8 @@ class ExtractDataView(APIView):
                             schema_name,
                             table_name,
                             schema,
-                            rows
+                            rows,
+                            timestamp  # ✅ Pass new param
                         )
 
                         print(f"[✔] Stored table {table_name} from {db_name}")
@@ -179,7 +182,10 @@ class ExtractDataView(APIView):
                     except Exception as e:
                         print(f"[ERROR] Failed storing table {table_key}: {e}")
 
-        return Response({"message": "Data extracted and stored on blockchain", "data": all_data}, status=200)
+        return Response({
+            "message": "Data extracted and stored on blockchain",
+            "data": all_data
+        }, status=200)
 
 class GetLedgerDataView(APIView):
     def get(self, request, system_id):
@@ -197,15 +203,50 @@ class GetLedgerDataView(APIView):
 def get_ledger_summary(request, sys_id):
     """
     Endpoint to return the Data Record summary for a system.
+    Filters out entries without valid ledger hashes and removes duplicates.
     """
     try:
         summaries = generate_table_summaries(sys_id)
-        return Response({"status": "success", "data": summaries})
+
+        # Filter out entries without ledger_hash or with placeholder ledger_hash
+        filtered = [
+            entry for entry in summaries
+            if entry.get("ledger_hash") and not entry["ledger_hash"].startswith("<")
+        ]
+
+        # Remove duplicates based on table_id and batch_id (if batch_id is in entries)
+        seen = set()
+        unique_summaries = []
+        for entry in filtered:
+            key = entry.get("table_id", None)  # use table_id as unique key
+            if key and key not in seen:
+                unique_summaries.append(entry)
+                seen.add(key)
+
+        print(f"[DEBUG] Ledger summaries for system {sys_id} (filtered): {unique_summaries}")
+        return Response({"status": "success", "data": unique_summaries})
+
     except Exception as e:
         print(f"[ERROR] Failed to fetch ledger summary: {e}")
         return Response({"status": "error", "message": str(e)}, status=500)
 
+@api_view(['GET'])  # ✅ THIS IS THE FIX
+def get_ledger_detail(request, sys_id, table_id):
+    """
+    API endpoint to return full ledger table data for a given system and table id.
+    """
+    try:
+        data = fetch_table_data(sys_id, table_id)
 
+        if not data:
+            return Response({"status": "error", "message": "Ledger data not found"}, status=404)
+
+        return Response({"status": "success", "data": data})
+
+    except Exception as e:
+        print(f"[ERROR] Failed to fetch ledger detail: {e}")
+        return Response({"status": "error", "message": str(e)}, status=500)
+    
 @csrf_exempt
 def get_ledger_table_summaries(request, sys_id):
     if request.method == 'GET':

@@ -6,11 +6,13 @@ import requests
 import socket
 from requests.exceptions import RequestException
 from .data_extraction_engine import extract_data
-from blockchain.blockchain_client import  get_table_data, get_all_tables_for_system
+from blockchain.blockchain_client import   get_table_data_by_id, get_all_tables_for_system
 import json
 import uuid
 import re
 from datetime import datetime
+from .ledger_helpers import find_ledger_entry
+
 
 
 def install_agent(system_url: str) -> bool:
@@ -190,17 +192,32 @@ def generate_table_summaries(sys_id):
 
     return table_summaries
 
+
+def fetch_table_data(sys_id, table_id):
+    """
+    Fetch full ledger table data by querying blockchain_client after
+    getting ledger metadata from local index.
+    """
+    ledger_entry = find_ledger_entry(sys_id, table_id)
+    if not ledger_entry:
+        print(f"[WARN] Ledger entry not found in local index: {table_id}")
+        return None
+
+    # Now fetch full data from blockchain
+    return  get_table_data_by_id(sys_id, table_id)
+
 def get_ledger_data(system_id: str, db_name: str, table_key: str):
     """
     Fetch stored ledger data from blockchain for a given system.
-    Returns parsed JSON.
     """
     try:
-        data = get_table_data(system_id, db_name, table_key)
+        table_id = f"{db_name}.{table_key}"  # or however your table_id is constructed
+        data =  get_table_data_by_id(system_id, table_id)
         return data
     except Exception as e:
         print(f"[ERROR] Failed to retrieve ledger data: {e}")
         return None
+
 
 def get_table_data_by_table_id(sys_id, table_id):
     """

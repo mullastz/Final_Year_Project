@@ -1,29 +1,28 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.0;
 
 contract BlockSentinelLedger {
     struct TableRecord {
         string schemaName;
         string tableName;
-        string[][] schema; // [["id", "integer"], ["name", "varchar"]]
-        string[][] rows;   // [["1", "admin"], ["2", "user"]]
+        string[][] schema;
+        string[][] rows;
     }
 
-    struct ActivityRecord {
-        string activityType; // INSERT, UPDATE, DELETE
+    struct LedgerMeta {
+        string dbName;
+        string batchId;
         string timestamp;
-        string username;
-        string query;
-        string[][] newData;
     }
 
-    // systemId => dbName => tableKey => TableRecord
+    // Stores full table data
     mapping(string => mapping(string => mapping(string => TableRecord))) private fullData;
 
-    // systemId + tableKey => list of activity logs
-    mapping(string => ActivityRecord[]) private activityLogs;
+    // Stores table metadata for recovery
+    mapping(string => string[]) private systemToTableKeys;             // systemId => list of tableKeys
+    mapping(string => LedgerMeta) private ledgerMetadata;             // systemId.tableKey => metadata
 
-    /// Store full table data (initial extraction)
+    // 🔐 Store both full data and metadata
     function storeTableData(
         string memory systemId,
         string memory dbName,
@@ -31,26 +30,45 @@ contract BlockSentinelLedger {
         string memory schemaName,
         string memory tableName,
         string[][] memory schema,
-        string[][] memory rows
+        string[][] memory rows,
+        string memory batchId,
+        string memory timestamp
     ) public {
+        // Save the full table snapshot
         TableRecord storage record = fullData[systemId][dbName][tableKey];
         record.schemaName = schemaName;
         record.tableName = tableName;
         record.schema = schema;
         record.rows = rows;
+
+        // Save metadata for ledger index
+        string memory fullKey = string(abi.encodePacked(systemId, ".", tableKey));
+        ledgerMetadata[fullKey] = LedgerMeta(dbName, batchId, timestamp);
+
+        // Track tableKey under this system if not already added
+        bool exists = false;
+        for (uint i = 0; i < systemToTableKeys[systemId].length; i++) {
+            if (keccak256(bytes(systemToTableKeys[systemId][i])) == keccak256(bytes(tableKey))) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            systemToTableKeys[systemId].push(tableKey);
+        }
     }
 
-    /// Retrieve full table data
-    function getTableData(
-        string memory systemId,
-        string memory dbName,
-        string memory tableKey
-    ) public view returns (
-        string memory schemaName,
-        string memory tableName,
-        string[][] memory schema,
-        string[][] memory rows
-    ) {
+    // 📖 View full table snapshot
+    function getTableData(string memory systemId, string memory dbName, string memory tableKey)
+        public
+        view
+        returns (
+            string memory schemaName,
+            string memory tableName,
+            string[][] memory schema,
+            string[][] memory rows
+        )
+    {
         TableRecord storage record = fullData[systemId][dbName][tableKey];
         return (
             record.schemaName,
@@ -60,33 +78,27 @@ contract BlockSentinelLedger {
         );
     }
 
-    /// Store real-time activity
-    function storeActivityLog(
-        string memory systemId,
-        string memory tableKey,
-        string memory activityType,
-        string memory timestamp,
-        string memory username,
-        string memory query,
-        string[][] memory newData
-    ) public {
-        ActivityRecord memory log = ActivityRecord(
-            activityType,
-            timestamp,
-            username,
-            query,
-            newData
-        );
-
-        string memory fullKey = string(abi.encodePacked(systemId, "_", tableKey));
-        activityLogs[fullKey].push(log);
+    // 📖 View table keys for a system (used to rebuild ledger index)
+    function getSystemTableKeys(string memory systemId)
+        public
+        view
+        returns (string[] memory)
+    {
+        return systemToTableKeys[systemId];
     }
 
-    /// Retrieve all activity logs for a given system+table
-    function getActivityLogs(string memory systemId, string memory tableKey)
-        public view returns (ActivityRecord[] memory)
+    // 📖 View metadata for a table
+    function getLedgerMetadata(string memory systemId, string memory tableKey)
+        public
+        view
+        returns (
+            string memory dbName,
+            string memory batchId,
+            string memory timestamp
+        )
     {
-        string memory fullKey = string(abi.encodePacked(systemId, "_", tableKey));
-        return activityLogs[fullKey];
+        string memory fullKey = string(abi.encodePacked(systemId, ".", tableKey));
+        LedgerMeta storage meta = ledgerMetadata[fullKey];
+        return (meta.dbName, meta.batchId, meta.timestamp);
     }
 }

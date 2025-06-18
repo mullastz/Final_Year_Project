@@ -1,183 +1,152 @@
 [
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "systemId",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "tableKey",
-          "type": "string"
-        }
-      ],
-      "name": "getActivityLogs",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "string",
-              "name": "activityType",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "timestamp",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "username",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "query",
-              "type": "string"
-            },
-            {
-              "internalType": "string[][]",
-              "name": "newData",
-              "type": "string[][]"
-            }
-          ],
-          "internalType": "struct BlockSentinelLedger.ActivityRecord[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "systemId",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "dbName",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "tableKey",
-          "type": "string"
-        }
-      ],
-      "name": "getTableData",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "schemaName",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "tableName",
-          "type": "string"
-        },
-        {
-          "internalType": "string[][]",
-          "name": "schema",
-          "type": "string[][]"
-        },
-        {
-          "internalType": "string[][]",
-          "name": "rows",
-          "type": "string[][]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "systemId",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "tableKey",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "activityType",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "timestamp",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "username",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "query",
-          "type": "string"
-        },
-        {
-          "internalType": "string[][]",
-          "name": "newData",
-          "type": "string[][]"
-        }
-      ],
-      "name": "storeActivityLog",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "systemId",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "dbName",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "tableKey",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "schemaName",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "tableName",
-          "type": "string"
-        },
-        {
-          "internalType": "string[][]",
-          "name": "schema",
-          "type": "string[][]"
-        },
-        {
-          "internalType": "string[][]",
-          "name": "rows",
-          "type": "string[][]"
-        }
-      ],
-      "name": "storeTableData",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ]
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "systemId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "tableKey",
+        "type": "string"
+      }
+    ],
+    "name": "getLedgerMetadata",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "dbName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "batchId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "timestamp",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "systemId",
+        "type": "string"
+      }
+    ],
+    "name": "getSystemTableKeys",
+    "outputs": [
+      {
+        "internalType": "string[]",
+        "name": "",
+        "type": "string[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "systemId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "dbName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "tableKey",
+        "type": "string"
+      }
+    ],
+    "name": "getTableData",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "schemaName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "tableName",
+        "type": "string"
+      },
+      {
+        "internalType": "string[][]",
+        "name": "schema",
+        "type": "string[][]"
+      },
+      {
+        "internalType": "string[][]",
+        "name": "rows",
+        "type": "string[][]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "systemId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "dbName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "tableKey",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "schemaName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "tableName",
+        "type": "string"
+      },
+      {
+        "internalType": "string[][]",
+        "name": "schema",
+        "type": "string[][]"
+      },
+      {
+        "internalType": "string[][]",
+        "name": "rows",
+        "type": "string[][]"
+      },
+      {
+        "internalType": "string",
+        "name": "batchId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "timestamp",
+        "type": "string"
+      }
+    ],
+    "name": "storeTableData",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

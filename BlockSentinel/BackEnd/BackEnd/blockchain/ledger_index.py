@@ -1,18 +1,17 @@
-# ledger_index.py
+import json
+from pathlib import Path
 
-# ✅ This dictionary simulates a blockchain index
-#    so we can retrieve what was written (per system)
-#    Used by views.py to build ledger summary
+# 🔁 Path to store the ledger index persistently
+LEDGER_INDEX_FILE = Path(__file__).parent / "ledger_index_store.json"
 
-LEDGER_INDEX = {
-    # "SYS-df41d7c8": [
-    #     {
-    #         "db_name": "lecture_db",
-    #         "table_key": "students",
-    #         "batch_id": "abc123",
-    #         "timestamp": "2025-06-13 10:00:00",
-    #         "ledger_hash": "0xabc123..."
-    #     },
-    #     ...
-    # ]
-}
+# 🔁 Load existing data from file if available
+if LEDGER_INDEX_FILE.exists():
+    with open(LEDGER_INDEX_FILE, "r") as f:
+        LEDGER_INDEX = json.load(f)
+else:
+    LEDGER_INDEX = {}
+
+# 🧠 Utility function to persist changes to disk
+def save_ledger_index():
+    with open(LEDGER_INDEX_FILE, "w") as f:
+        json.dump(LEDGER_INDEX, f, indent=2)

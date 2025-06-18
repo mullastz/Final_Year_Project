@@ -5,7 +5,6 @@ import { LedgerService } from '../../services/ledger/ledger.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-
 @Component({
   selector: 'app-ledger-detail',
   imports: [CommonModule, RouterModule],
@@ -13,7 +12,7 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./ledger-detail.component.css']
 })
 export class LedgerDetailComponent implements OnInit {
-  ledger!: Ledger;
+  ledger?: Ledger;  // ✅ use optional type to allow undefined initially
   showDownloadDropdown = false;
 
   constructor(private route: ActivatedRoute, private ledgerService: LedgerService) {}

@@ -14,7 +14,7 @@ urlpatterns = [
     path('extract-data/', ExtractDataView.as_view(), name='extract_data'),
     path('api/ledger-data/<uuid:system_id>/', GetLedgerDataView.as_view(), name='get_ledger_data'),
     path('api/system/<str:sys_id>/ledger/summary/', views.get_ledger_summary, name='ledger_summary'),
-    path('api/system/<str:sys_id>/ledger/<str:table_id>/', views.get_full_table_data, name='ledger_table_detail'),
+    path('api/system/<str:sys_id>/ledger/<str:table_id>/', views.get_ledger_detail, name='ledger_table_detail'),
 ]
 
 if settings.DEBUG:
