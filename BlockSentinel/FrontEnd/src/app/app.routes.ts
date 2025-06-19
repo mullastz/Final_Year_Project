@@ -24,6 +24,8 @@ import { SystemHealthOverviewComponent } from './pages/health/System-Health-Over
 import { ResourceUsageMonitorComponent } from './pages/health/Resource-Usage-Monitor/resource-usage-monitor/resource-usage-monitor.component';
 import { ConnectedSystemsStatusComponent } from './pages/health/Connected-Systems-Status/connected-systems-status/connected-systems-status.component';
 import { AlertsNotificationsComponent } from './pages/health/ Alerts-Notifications/alerts-notifications/alerts-notifications.component';
+import { AuthGuard } from './guards/auth.guard';
+
 
 
 
@@ -43,6 +45,7 @@ export const routes: Routes = [
     {
       path: 'dashboard',
       component: DashboardComponent,
+      canActivate: [AuthGuard], 
       children: [
         { path: '', redirectTo: 'overview', pathMatch: 'full' },
         { path: 'overview', component: DashboardOverviewComponent },

@@ -4,6 +4,8 @@ import os
 from datetime import datetime
 from .ledger_index import LEDGER_INDEX, save_ledger_index
 from registration.ledger_helpers import find_ledger_entry
+from auditlog.models import BlockchainTransactionLog
+from django.utils.timezone import now
 
 # Blockchain setup
 RPC_URL = "http://127.0.0.1:7545"
@@ -42,9 +44,32 @@ def save_system_id(system_id):
             json.dump(ids, f)
 
 # ---------------------------
+# ✅ Performing Audit in Blockchain
+# ---------------------------
+def log_transaction(tx_receipt, function_name, system_id=None, table_id=None, user=None):
+    """
+    Log blockchain transaction details to the database.
+    """
+    try:
+        BlockchainTransactionLog.objects.create(
+            tx_hash=tx_receipt.transactionHash.hex(),
+            function_called=function_name,
+            action_type="write" if function_name.lower().startswith("store") else "read",
+            gas_used=tx_receipt.gasUsed,
+            status="Success" if tx_receipt.status == 1 else "Fail",
+            block_number=tx_receipt.blockNumber,
+            timestamp=now(),
+            system_id=system_id,
+            table_id=table_id,
+            performed_by=user
+        )
+    except Exception as e:
+        print(f"[AuditLog Error] Failed to log transaction: {e}")
+
+# ---------------------------
 # ✅ Store table snapshot
 # ---------------------------
-def store_table_data(system_id, batch_id, db_name, table_key, schema_name, table_name, schema, rows, timestamp):
+def store_table_data(system_id, batch_id, db_name, table_key, schema_name, table_name, schema, rows, timestamp, user=None):
     try:
         tx = contract.functions.storeTableData(
             system_id,
@@ -72,12 +97,22 @@ def store_table_data(system_id, batch_id, db_name, table_key, schema_name, table
         save_ledger_index()
         save_system_id(system_id)
 
+        # ✅ Log the transaction
+        log_transaction(
+            receipt,
+            function_name="storeTableData",
+            system_id=system_id,
+            table_id=table_key,
+            user=user
+        )
+
         print(f"✅ Table data stored: {table_name} (tx hash: {ledger_hash})")
         return receipt
 
     except Exception as e:
         print(f"[ERROR] Failed to store table {table_name}: {e}")
         return None
+
 
 # ---------------------------
 # ✅ Rebuild local index

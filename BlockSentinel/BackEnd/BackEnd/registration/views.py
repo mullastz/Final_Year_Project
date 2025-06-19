@@ -174,13 +174,15 @@ class ExtractDataView(APIView):
                             table_name,
                             schema,
                             rows,
-                            timestamp  # ✅ Pass new param
+                            timestamp,
+                            user=request.user  # ✅ Added here
                         )
 
                         print(f"[✔] Stored table {table_name} from {db_name}")
 
                     except Exception as e:
                         print(f"[ERROR] Failed storing table {table_key}: {e}")
+
 
         return Response({
             "message": "Data extracted and stored on blockchain",

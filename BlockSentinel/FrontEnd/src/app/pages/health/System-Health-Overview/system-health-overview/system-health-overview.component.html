@@ -21,9 +21,12 @@
             <td class="px-6 py-4">{{ service.lastChecked | date: 'short' }}</td>
             <td class="px-6 py-4">
               <ng-container *ngFor="let action of getActions(service.status, service.service)">
-                <button class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded mr-2">
-                  {{ action }}
-                </button>
+                <button 
+                class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded mr-2"
+                (click)="handleAction(action, service.service)">
+                {{ action }}
+              </button>
+              
               </ng-container>
             </td>
           </tr>
@@ -32,3 +35,16 @@
     </div>
   </div>
   
+<!-- Log Modal -->
+<div *ngIf="isLogModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
+  <div class="bg-[#011F2F] text-white w-[600px] max-h-[80vh] overflow-y-auto rounded shadow-lg p-4">
+    <h2 class="text-xl font-semibold mb-2">Logs - {{ selectedService }}</h2>
+    <pre class="bg-[#00121C] p-3 rounded text-sm overflow-x-auto">{{ selectedLogs.join('') }}</pre>
+    <div class="text-right mt-3">
+      <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded" (click)="isLogModalOpen = false">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+

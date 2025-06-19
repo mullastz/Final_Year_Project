@@ -162,73 +162,108 @@
   <!-- Card Header -->
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-lg font-semibold">Transaction History</h2>
-    <div class="flex space-x-2">
-      <!-- Download Dropdown -->
-      <div class="relative">
-        <button 
-          (click)="toggleDownloadDropdown()" 
-          class="border border-[#00121C] text-white px-4 py-1 rounded-md bg-[#00121C]"
-        >
-          Download
-        </button>
-        
-        <!-- Dropdown Menu -->
-        <div 
-          class="absolute right-0 mt-1 bg-[#00121C] text-sm rounded shadow-lg w-36 z-10"
-          *ngIf="isDownloadDropdownOpen"
-        >
-          <a href="#" class="block px-3 py-2 hover:bg-[#0E8CCF] rounded-md">PDF</a>
-          <a href="#" class="block px-3 py-2 hover:bg-[#0E8CCF] rounded-md">CSV</a>
-          <a href="#" class="block px-3 py-2 hover:bg-[#0E8CCF] rounded-md">Excel</a>
-        </div>
-      </div>
-      
-
-      <!-- View Button -->
-      <button class="border border-[#00121C] text-white px-4 py-1 rounded-md bg-[#00121C]">
-        View More
+    <div class="flex space-x-2 items-center">
+      <!-- Download PDF Button -->
+      <button 
+        (click)="exportToPDF()"
+        class="border border-[#00121C] text-white px-4 py-1 rounded-md bg-[#00121C]"
+      >
+        Download PDF
       </button>
-
-      <!-- Filter Button -->
-      <button class="border border-[#00121C] text-white px-4 py-1 rounded-md bg-[#00121C]">
+  
+      <!-- Filter Toggle Button -->
+      <button 
+        (click)="toggleFilterPanel()"
+        class="border border-[#00121C] text-white px-4 py-1 rounded-md bg-[#00121C]"
+      >
         Filter
       </button>
     </div>
   </div>
-
-  <!-- Table -->
-  <div class="overflow-x-auto">
-    <table class="w-full text-sm text-left">
-      <thead class="bg-[#00121C] text-white">
-        <tr>
-          <th class="py-2 px-3">Transaction ID</th>
-          <th class="py-2 px-3">Timestamp</th>
-          <th class="py-2 px-3">System Name</th>
-          <th class="py-2 px-3">Action Type</th>
-          <th class="py-2 px-3">Status</th>
-          <th class="py-2 px-3">Performed By</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let txn of transaction" class="border-b border-[#0E8CCF]/20">
-          <td class="py-2 px-3 font-medium">{{ txn.transactionId }}</td>
-          <td class="py-2 px-3">{{ txn.timestamp }}</td>
-          <td class="py-2 px-3">{{ txn.systemName }}</td>
-          <td class="py-2 px-3">{{ txn.actionType }}</td>
-          <td class="py-2 px-3">
-            <span class="flex items-center space-x-2">
-              <span
-                class="w-2.5 h-2.5 rounded-full"
-                [ngClass]="txn.status === 'Success' ? 'bg-[#29FB05]' : 'bg-[#FB0505]'"
-              ></span>
-              <span>{{ txn.status }}</span>
-            </span>
-          </td>
-          <td class="py-2 px-3">{{ txn.performedBy }}</td>
-        </tr>
-      </tbody>
-    </table>
+  
+  <!-- Filter Panel -->
+  <div 
+    *ngIf="showFilterPanel" 
+    class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4 bg-[#00121C] p-4 rounded-lg"
+  >
+    <!-- Function Filter -->
+    <input 
+      type="text"
+      placeholder="Function"
+      class="bg-[#011F2F] text-white px-2 py-1 rounded border border-[#0E8CCF]"
+      [(ngModel)]="filter.function"
+    />
+  
+    <!-- Status Filter -->
+    <select [(ngModel)]="filter.status" class="bg-[#011F2F] text-white px-2 py-1 rounded border border-[#0E8CCF]">
+      <option value="">All Status</option>
+      <option value="Success">Success</option>
+      <option value="Fail">Fail</option>
+    </select>
+  
+    <!-- System/Table Filter -->
+    <input 
+      type="text"
+      placeholder="System or Table ID"
+      class="bg-[#011F2F] text-white px-2 py-1 rounded border border-[#0E8CCF]"
+      [(ngModel)]="filter.systemOrTable"
+    />
+  
+    <!-- Start Date -->
+    <input 
+      type="date"
+      class="bg-[#011F2F] text-white px-2 py-1 rounded border border-[#0E8CCF]"
+      [(ngModel)]="filter.startDate"
+    />
+  
+    <!-- End Date -->
+    <input 
+      type="date"
+      class="bg-[#011F2F] text-white px-2 py-1 rounded border border-[#0E8CCF]"
+      [(ngModel)]="filter.endDate"
+    />
   </div>
+
+ <!-- Table -->
+<div class="overflow-x-auto">
+  <table class="w-full text-sm text-left">
+    <thead class="bg-[#00121C] text-white">
+      <tr>
+        <th class="py-2 px-3">Transaction Hash</th>
+        <th class="py-2 px-3">Timestamp</th>
+        <th class="py-2 px-3">System Name</th>
+        <th class="py-2 px-3">Table ID</th>
+        <th class="py-2 px-3">Function Called</th>
+        <th class="py-2 px-3">Action Type</th>
+        <th class="py-2 px-3">Gas Used</th>
+        <th class="py-2 px-3">Block Number</th>
+        <th class="py-2 px-3">Status</th>
+        <th class="py-2 px-3">Performed By</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let txn of filteredTransactions" class="border-b border-[#0E8CCF]/20">
+        <td class="py-2 px-3 font-medium">{{ txn.tx_hash }}</td>
+        <td class="py-2 px-3">{{ txn.timestamp }}</td>
+        <td class="py-2 px-3">{{ txn.system_id}}</td>
+        <td class="py-2 px-3">{{ txn.table_id }}</td>
+        <td class="py-2 px-3">{{ txn.function_called }}</td>
+        <td class="py-2 px-3">{{ txn.action_type }}</td>
+        <td class="py-2 px-3">{{ txn.gas_used }}</td>
+        <td class="py-2 px-3">{{ txn.block_number }}</td>
+        <td class="py-2 px-3">
+          <span class="flex items-center space-x-2">
+            <span
+              class="w-2.5 h-2.5 rounded-full"
+              [ngClass]="txn.status === 'Success' ? 'bg-[#29FB05]' : 'bg-[#FB0505]'"
+            ></span>
+            <span>{{ txn.status }}</span>
+          </span>
+        </td>
+        <td class="py-2 px-3">{{ txn.performed_by }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
     

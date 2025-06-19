@@ -35,9 +35,9 @@
           <a [routerLink]="['/dashboard/profile']" class="flex items-center px-4 py-2 hover:bg-[#0E8CCF] rounded-md transition">
             <i class="fas fa-user-circle mr-2"></i> Profile
           </a>
-          <button class="w-full flex items-center px-4 py-2 hover:bg-[#0E8CCF] rounded-md transition text-left">
+          <button (click)="logout()" class="w-full flex items-center px-4 py-2 hover:bg-[#0E8CCF] rounded-md transition text-left">
             <i class="fas fa-sign-out-alt mr-2"></i> Logout
-          </button>
+          </button>          
         </div>
       </div>
     </div>

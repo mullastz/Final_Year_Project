@@ -13,6 +13,10 @@ import { CommonModule } from '@angular/common';
 })
 export class SystemHealthOverviewComponent {
   systemHealthList: SystemHealth[] = [];
+  selectedLogs: string[] = [];
+  selectedService: string = '';
+  isLogModalOpen: boolean = false;
+
 
   constructor(private healthService: SystemHealthService) {}
 
@@ -50,6 +54,48 @@ export class SystemHealthOverviewComponent {
       default:
         return [];
     }
+  }
+
+  handleAction(action: string, service: string): void {
+    if (action === 'Retry' || action === 'Reconnect') {
+      this.healthService.retryService(service).subscribe({
+        next: (res) => {
+          // Update UI with new status
+          const item = this.systemHealthList.find(s => s.service === res.service);
+          if (item) {
+            item.status = res.newStatus;
+            item.lastChecked = new Date().toISOString();
+          }
+        },
+        error: (err) => {
+          console.error(`Failed to ${action} for ${service}:`, err);
+        }
+      });
+    } else if (action === 'View Logs') {
+      alert(`🚧 Logs not implemented yet for ${service}`);
+    } else if (action === 'Stop') {
+      alert(`🛑 Stop command not available for ${service}`);
+    }
+  }
+
+  viewLogs(service: string): void {
+    this.healthService.getServiceLogs(service).subscribe(response => {
+      this.selectedLogs = response.logs;
+      this.selectedService = service;
+      this.isLogModalOpen = true;
+    });
+  }
+  
+  stopAgent(): void {
+    this.healthService.stopAgent().subscribe({
+      next: () => alert('Agent stopped successfully.'),
+      error: () => alert('Failed to stop agent.')
+    });
+  }
+  
+  closeLogs(): void {
+    this.selectedLogs = [];
+    this.selectedService = '';
   }
 
 }

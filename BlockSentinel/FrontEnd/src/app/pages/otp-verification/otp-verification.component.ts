@@ -24,17 +24,19 @@ export class OtpVerificationComponent {
       this.errorMessage = 'Please enter the OTP code.';
       return;
     }
-
+  
     this.http.post<any>('http://127.0.0.1:8000/auth/verify/', {
       email: this.email,
       code: this.otpCode
     }).subscribe(
       (response) => {
         if (response.redirect) {
-          // OTP verified, redirect to dashboard
+          //Store the tokens in localStorage
+          localStorage.setItem('access_token', response.access);
+          localStorage.setItem('refresh_token', response.refresh);
+  
           this.router.navigate(['/dashboard']);
         } else {
-          // Handle failure to verify OTP
           this.errorMessage = 'Invalid OTP code. Please try again.';
         }
       },
@@ -43,6 +45,7 @@ export class OtpVerificationComponent {
       }
     );
   }
+  
 
   // Function to handle OTP resend
   resendOtp(): void {
