@@ -5242,6 +5242,104 @@
       "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
       "timestamp": "2025-06-17 13:56:02",
       "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_migrations",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_content_type",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.auth_permission",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_student",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_superadmin",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_lecturer",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_session",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_migrations",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_content_type",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.auth_permission",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_student",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_superadmin",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_lecturer",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_session",
+      "batch_id": "f7fa1f38-b8ba-44ca-bc56-8408fa2a13d6",
+      "timestamp": "2025-06-17 13:56:02",
+      "ledger_hash": "<hash unavailable post-restart>"
     }
   ],
   "SYS-c479eff4": [
@@ -5293,6 +5391,104 @@
       "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
       "timestamp": "2025-06-18 23:15:55",
       "ledger_hash": "0cb066422032e04faddb781ab2fea27bacd1e6a98b68511083538d03efa7a972"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_migrations",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_content_type",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.auth_permission",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_student",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_superadmin",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_lecturer",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_session",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_migrations",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_content_type",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.auth_permission",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_student",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_superadmin",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_lecturer",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_session",
+      "batch_id": "d5bf3c77-880e-4d66-869f-4a20d6120f9e",
+      "timestamp": "2025-06-18 23:15:55",
+      "ledger_hash": "<hash unavailable post-restart>"
     },
     {
       "db_name": "lecturer_evaluation_db",
@@ -7941,6 +8137,104 @@
       "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
       "timestamp": "2025-06-19 00:57:58",
       "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_migrations",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_content_type",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.auth_permission",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_student",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_superadmin",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_lecturer",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_session",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_migrations",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_content_type",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.auth_permission",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_student",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_superadmin",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_lecturer",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_session",
+      "batch_id": "883bbb6f-4fd4-4428-9540-9ebd895bf470",
+      "timestamp": "2025-06-19 00:57:58",
+      "ledger_hash": "<hash unavailable post-restart>"
     }
   ],
   "SYS-f9a1da5e": [
@@ -7992,6 +8286,104 @@
       "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
       "timestamp": "2025-06-19 12:57:54",
       "ledger_hash": "61d4b6199615d25c8801a3a65d37d1a44e6cfd8fae7ecef29546c3309a1d301d"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_migrations",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_content_type",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.auth_permission",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_student",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_superadmin",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_lecturer",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_session",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_migrations",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_content_type",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.auth_permission",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_student",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_superadmin",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.evaluation_app_lecturer",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
+    },
+    {
+      "db_name": "lecturer_evaluation_db",
+      "table_key": "public.django_session",
+      "batch_id": "3c06daf8-e0dd-4237-a07a-26a0a8e5c8bb",
+      "timestamp": "2025-06-19 12:57:54",
+      "ledger_hash": "<hash unavailable post-restart>"
     },
     {
       "db_name": "lecturer_evaluation_db",

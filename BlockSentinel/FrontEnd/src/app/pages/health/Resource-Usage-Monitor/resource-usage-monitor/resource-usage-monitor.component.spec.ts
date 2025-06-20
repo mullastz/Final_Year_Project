@@ -1,74 +1,81 @@
 import { Component, OnInit } from '@angular/core';
 import { ResourceUsageService } from '../../../../services/resource-usage/resource-usage.service';
 import { ResourceUsage } from '../../../../interface/resource-usage';
+import { CommonModule } from '@angular/common';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexXAxis,
+  ApexStroke,
+  ApexFill
+} from 'ng-apexcharts';
 
-import { ChartData, ChartOptions, ChartType } from 'chart.js';
-import { CommonModule, NgIf, NgFor } from '@angular/common';
-import { NgChartsModule } from 'ng2-charts';
+// ✅ Strongly typed interface for chart config per resource
+interface ResourceChartData {
+  type: string;
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  stroke: ApexStroke;
+  fill: ApexFill;
+  colors: string[];
+}
 
 @Component({
   selector: 'app-resource-usage-monitor',
   standalone: true,
-  imports: [
-    CommonModule,
-    NgChartsModule,
-    NgFor  // ✅ Required for *ngFor to work in template
-  ],
+  imports: [CommonModule, NgApexchartsModule],
   templateUrl: './resource-usage-monitor.component.html',
-  styleUrls: ['./resource-usage-monitor.component.css'],
+  styleUrls: ['./resource-usage-monitor.component.css']
 })
 export class ResourceUsageMonitorComponent implements OnInit {
-  usageData: ResourceUsage[] = [];
-
-  chartConfigs: {
-    [key: string]: {
-      data: ChartData<'line'>;
-      options: ChartOptions<'line'>;
-      type: ChartType;
-    };
-  } = {};
+  usageData: ResourceChartData[] = [];
 
   constructor(private usageService: ResourceUsageService) {}
 
   ngOnInit(): void {
-    this.usageService.getResourceUsage().subscribe((data) => {
-      this.usageData = data;
-      this.prepareCharts();
-    });
-  }
+    this.usageService.getResourceUsage().subscribe((data: ResourceUsage[]) => {
+      this.usageData = data.map((resource) => {
+        const labels = resource.data.map(d =>
+          new Date(d.timestamp).toLocaleTimeString()
+        );
+        const values = resource.data.map(d => d.usagePercent);
 
-  prepareCharts(): void {
-    this.usageData.forEach(resource => {
-      const labels = resource.data.map(d => new Date(d.timestamp).toLocaleTimeString());
-      const usageValues = resource.data.map(d => d.usagePercent);
-
-      this.chartConfigs[resource.type] = {
-        data: {
-          labels,
-          datasets: [
+        return {
+          type: resource.type,
+          series: [
             {
-              label: `${resource.type} Usage`,
-              data: usageValues,
-              borderColor: this.getLineColor(resource.type),
-              backgroundColor: 'transparent',
-              tension: 0.4
+              name: `${resource.type} Usage`,
+              data: values
             }
-          ]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              labels: { color: 'white' }
+          ],
+          chart: {
+            type: 'line',
+            height: 250
+          },
+          xaxis: {
+            categories: labels,
+            labels: {
+              style: { colors: '#ffffff' }
             }
           },
-          scales: {
-            x: { ticks: { color: 'white' } },
-            y: { beginAtZero: true, ticks: { color: 'white' } }
-          }
-        },
-        type: 'line'
-      };
+          stroke: {
+            curve: 'smooth',
+            width: 2
+          },
+          fill: {
+            type: 'gradient',
+            gradient: {
+              shade: 'dark',
+              type: 'vertical',
+              gradientToColors: undefined,
+              stops: [0, 100]
+            }
+          },
+          colors: [this.getLineColor(resource.type)]
+        };
+      });
     });
   }
 

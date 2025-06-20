@@ -94,18 +94,24 @@
 
     <!-- Section Two -->
     <div class="flex flex-col lg:flex-row gap-6 px-6 mt-6">
-      <!-- Health Monitoring Card -->
+    <!-- Health Monitoring Card -->
       <div
-        class="bg-[#011F2F] hover:bg-gradient-to-t hover:from-[#011F2F] hover:to-[#036295] rounded-lg p-4 shadow-lg w-full lg:w-[66.7%] transform transition-transform duration-300 hover:scale-105"
+      class="bg-[#011F2F] hover:bg-gradient-to-t hover:from-[#011F2F] hover:to-[#036295] rounded-lg p-4 shadow-lg w-full lg:w-[66.7%] transform transition-transform duration-300 hover:scale-105"
       >
-        <h2 class="text-white text-lg font-semibold mb-4">Health Monitoring</h2>
-        <canvas 
-          baseChart 
-          [data]="lineChartData" 
-          [options]="lineChartOptions" 
-          chartType="line">
-        </canvas>
+      <h2 class="text-white text-lg font-semibold mb-4">Health Monitoring</h2>
+      <apx-chart
+        [series]="healthChartOptions.series"
+        [chart]="healthChartOptions.chart"
+        [xaxis]="healthChartOptions.xaxis"
+        [stroke]="healthChartOptions.stroke"
+        [colors]="healthChartOptions.colors"
+        [dataLabels]="healthChartOptions.dataLabels"
+        [yaxis]="healthChartOptions.yaxis"
+        [legend]="healthChartOptions.legend"
+        [tooltip]="healthChartOptions.tooltip"
+      ></apx-chart>
       </div>
+
     
       <!-- System Status Card -->
       <div

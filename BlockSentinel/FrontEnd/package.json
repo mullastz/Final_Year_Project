@@ -28,6 +28,7 @@
     "jspdf-autotable": "^5.0.2",
     "ng-apexcharts": "^1.15.0",
     "ng2-charts": "^4.1.1",
+    "ngx-apexcharts": "^0.8.0",
     "postcss": "^8.5.3",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.1.3",
