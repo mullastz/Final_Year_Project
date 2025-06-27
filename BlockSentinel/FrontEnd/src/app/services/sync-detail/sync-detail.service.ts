@@ -7,7 +7,7 @@ import { SyncDetail } from '../../interface/sync-detail';
   providedIn: 'root'
 })
 export class SyncDetailService {
-  private apiUrl = 'http://localhost:3008/sync-detail';
+  private apiUrl = 'http://127.0.0.1:8000/reg/sync-detail/';
 
   constructor(private http: HttpClient) {}
 

@@ -2,7 +2,7 @@ from . import views
 from django.conf import settings # type: ignore
 from django.conf.urls.static import static # type: ignore
 from django.urls import path # type: ignore
-from .views import RegisterSystemView, RegisteredSystemListView, RegisteredSystemDetailView, AgentInstallView, DiscoverDatabasesView, FetchDatabaseNamesView, ExtractDataView, GetLedgerDataView
+from .views import RegisterSystemView, RegisteredSystemListView, RegisteredSystemDetailView, AgentInstallView, DiscoverDatabasesView, FetchDatabaseNamesView, ExtractDataView, GetLedgerDataView, SyncStatusView, SyncDetailView
 
 urlpatterns = [
     path('register-system/', RegisterSystemView.as_view(), name='register_system'),
@@ -15,7 +15,10 @@ urlpatterns = [
     path('api/ledger-data/<uuid:system_id>/', GetLedgerDataView.as_view(), name='get_ledger_data'),
     path('api/system/<str:sys_id>/ledger/summary/', views.get_ledger_summary, name='ledger_summary'),
     path('api/system/<str:sys_id>/ledger/<str:table_id>/', views.get_ledger_detail, name='ledger_table_detail'),
+    path("sync/status/", SyncStatusView.as_view(), name="sync_status"),
+    path("sync-detail/", SyncDetailView.as_view(), name="sync_detail"),
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

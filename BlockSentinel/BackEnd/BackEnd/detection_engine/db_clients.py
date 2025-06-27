@@ -30,6 +30,14 @@ class PostgreSQLClient:
             schema.setdefault(table, []).append(column)
         return schema
 
+    def execute_raw_query(self, query):
+        with self.conn.cursor() as cursor:
+            cursor.execute(query)
+            results = cursor.fetchall()
+        return results
+
+
+
     def close(self):
         self.cursor.close()
         self.conn.close()

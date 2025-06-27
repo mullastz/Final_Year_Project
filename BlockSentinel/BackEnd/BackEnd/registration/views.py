@@ -14,72 +14,94 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from datetime import datetime
-from auditlog.monitoring_engine import start_monitoring_agent 
+from .sync_engine import start_sync
+from blockchain.ledger_index import LEDGER_INDEX
+
 
 
 logger = logging.getLogger(__name__)  # optional logger for production use
 
+
+
 class RegisterSystemView(APIView):
-   def post(self, request):
-    success = False  # Initialize early to avoid UnboundLocalError
+    def post(self, request):
+        success = False  # Initialize early to avoid UnboundLocalError
 
-    try:
-        # Extract form data
-        name = request.POST.get('name')
-        url = request.POST.get('url')
-        data_type = request.POST.get('data_type')
-        system_type = request.POST.get('system_type')
-        display_id = request.POST.get('display_id')
-        num_admins = int(request.POST.get('num_admins', 0))
-        profile_photo = request.FILES.get('profile_photo')
+        try:
+            # Extract form data
+            name = request.POST.get('name')
+            url = request.POST.get('url')
+            data_type = request.POST.get('data_type')
+            system_type = request.POST.get('system_type')
+            display_id = request.POST.get('display_id')
+            num_admins = int(request.POST.get('num_admins', 0))
+            profile_photo = request.FILES.get('profile_photo')
 
-        admins = []
-        for i in range(num_admins):
-            admin_name = request.POST.get(f'admins[{i}][name]')
-            admin_email = request.POST.get(f'admins[{i}][email]')
-            if admin_name and admin_email:
-                admins.append({'name': admin_name, 'email': admin_email})
+            admins = []
+            for i in range(num_admins):
+                admin_name = request.POST.get(f'admins[{i}][name]')
+                admin_email = request.POST.get(f'admins[{i}][email]')
+                if admin_name and admin_email:
+                    admins.append({'name': admin_name, 'email': admin_email})
 
-        data = {
-            'name': name,
-            'url': url,
-            'data_type': data_type,
-            'system_type': system_type,
-            'display_id': display_id,
-            'num_admins': num_admins,
-            'profile_photo': profile_photo,
-            'admins': admins
-        }
+            data = {
+                'name': name,
+                'url': url,
+                'data_type': data_type,
+                'system_type': system_type,
+                'display_id': display_id,
+                'num_admins': num_admins,
+                'profile_photo': profile_photo,
+                'admins': admins
+            }
 
-        serializer = RegisteredSystemSerializer(data=data)
-        if serializer.is_valid():
-            system = serializer.save()
+            serializer = RegisteredSystemSerializer(data=data)
+            if serializer.is_valid():
+                system = serializer.save()
 
-            # Install agent
-            system_url = system.url
-            success = install_agent(system_url)
-            print(f"[INFO] Agent installation status for {system_url}: {success}")
+                # Install agent
+                system_url = system.url
+                success = install_agent(system_url)
+                print(f"[INFO] Agent installation status for {system_url}: {success}")
 
-            if success:
-                discovered_dbs = discover_databases(system_url)
-                print(f"[INFO] Databases discovered: {discovered_dbs}")
+                if success:
+                    discovered_dbs = discover_databases(system_url)
+                    print(f"[INFO] Databases discovered: {discovered_dbs}")
 
-                return Response({
-                    "message": "System registered successfully",
-                    "system_id": str(system.system_id),
-                    "display_id": system.display_id,
-                    "discovered_databases": discovered_dbs
-                }, status=status.HTTP_201_CREATED)
+                    # ✅ Start syncing for Orion 1 demo tables
+                    orion_demo_tables = [
+                        'evaluation_app_student',
+                        'evaluation_app_lecturer',
+                        'evaluation_app_superadmin',
+                        'evaluation_app_module',
+                        'evaluation_app_lecturerfeedback',
+                        'evaluation_app_assignedlecmodules'
+                    ]
+
+                    try:
+                        system_id = str(system.system_id)
+                        start_sync(system_id, orion_demo_tables)
+                        print(f"[✔] Sync tracking started for {system_id} on tables: {orion_demo_tables}")
+                    except Exception as e:
+                        print(f"[ERROR] Failed to start sync tracking: {e}")
+
+                    return Response({
+                        "message": "System registered successfully",
+                        "system_id": str(system.system_id),
+                        "display_id": system.display_id,
+                        "discovered_databases": discovered_dbs
+                    }, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({'error': 'Agent installation failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             else:
-                return Response({'error': 'Agent installation failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    except json.JSONDecodeError:
-        return Response({'error': 'Invalid JSON in "data" field'}, status=status.HTTP_400_BAD_REQUEST)
-    except Exception as e:
-        logger.exception("Unexpected error during system registration")
-        return Response({'error': f'Unexpected error: {str(e)}', 'success': success}, status=status.HTTP_400_BAD_REQUEST)
+        except json.JSONDecodeError:
+            return Response({'error': 'Invalid JSON in "data" field'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.exception("Unexpected error during system registration")
+            return Response({'error': f'Unexpected error: {str(e)}', 'success': success}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class RegisteredSystemListView(APIView):
     def get(self, request):
@@ -294,3 +316,77 @@ def get_full_table_data(request, sys_id, table_id):
             return JsonResponse({"status": "success", "data": table_data}, status=200)
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+class SyncStatusView(APIView):
+    def get(self, request):
+        try:
+            summary = {
+                "syncsToday": 0,
+                "pendingSyncs": 0,
+                "successful": 0,
+                "failed": 0,
+            }
+
+            today = datetime.now().date()
+
+            for system_id, entries in LEDGER_INDEX.items():
+                for entry in entries:
+                    timestamp = datetime.fromisoformat(entry['timestamp'])
+                    if timestamp.date() == today:
+                        summary["syncsToday"] += 1
+                    summary["successful"] += 1
+
+            # Set pending and failed (0 for now)
+            summary["pendingSyncs"] = 0
+            summary["failed"] = 0
+
+            return Response(summary, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class SyncDetailView(APIView):
+    def get(self, request):
+        try:
+            details = []
+            seen_ledger_hashes = set()  # to track unique ledger hashes
+
+            for system_display_id, entries in LEDGER_INDEX.items():
+                try:
+                    system = RegisteredSystem.objects.get(display_id=system_display_id)
+                    system_name = system.name
+                except RegisteredSystem.DoesNotExist:
+                    system_name = system_display_id
+
+                for entry in entries:
+                    try:
+                        ledger_hash = entry.get("ledger_hash", "")
+                        # Filter out empty or placeholder ledger hashes
+                        if not ledger_hash or ledger_hash == "<hash unavailable post-restart>":
+                            continue
+                        # Skip duplicates
+                        if ledger_hash in seen_ledger_hashes:
+                            continue
+
+                        timestamp = datetime.fromisoformat(entry["timestamp"])
+                        details.append({
+                            "id": entry["batch_id"],
+                            "dateTime": timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+                            "system": system_name,
+                            "recordsSynced": len(entry.get("rows", [])),
+                            "status": "Success",
+                            "ledgerHash": ledger_hash,
+                            "syncedBy": "System",
+                            "affectedTables": entry.get("table_key", ""),
+                            "notes": ""
+                        })
+                        seen_ledger_hashes.add(ledger_hash)  # mark this hash as seen
+
+                    except Exception as inner:
+                        print(f"[ERROR] Skipping entry due to: {inner}")
+
+            return Response(details, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print(f"[FATAL ERROR] SyncDetailView failed: {e}")
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -24,14 +24,17 @@ export class SyncStatusComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.syncStatusService.getSyncSummary().subscribe(data => {
-      this.syncSummary = Array.isArray(data) ? data[0] : data;
+    this.syncStatusService.getSyncSummary().subscribe((data: SyncSummary) => {
+      this.syncSummary = data;
     });
 
     this.syncDetailService.getSyncDetails().subscribe(data => {
       this.syncDetails = data;
     });
+    
   }
+  
+  
 
   toggleDownloadDropdown() {
     this.showDownloadDropdown = !this.showDownloadDropdown;

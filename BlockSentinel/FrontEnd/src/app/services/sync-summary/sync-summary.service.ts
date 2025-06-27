@@ -8,7 +8,7 @@ import { SyncSummary } from '../../interface/sync-summary';
   providedIn: 'root'
 })
 export class SyncStatusService {
-  private apiUrl = 'http://localhost:3007/sync-summary';
+  private apiUrl = 'http://127.0.0.1:8000/reg/sync/status/';
 
   constructor(private http: HttpClient) {}
 
