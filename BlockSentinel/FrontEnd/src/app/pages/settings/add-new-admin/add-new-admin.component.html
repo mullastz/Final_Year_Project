@@ -11,6 +11,7 @@
       <div class="relative">
         <input
           type="text"
+          [(ngModel)]="adminName"
           class=" pl-10 pr-4 py-2 rounded bg-[#011F2F] text-white placeholder-gray-400 focus:outline-none focus:ring focus:ring-blue-500"
         />
         <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -23,6 +24,7 @@
       <div class="relative">
         <input
           type="email"
+          [(ngModel)]="adminEmail"
           class=" pl-10 pr-4 py-2 rounded bg-[#011F2F] text-white placeholder-gray-400 focus:outline-none focus:ring focus:ring-blue-500"
         />
         <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -40,6 +42,7 @@
           type="radio"
           name="adminRole"
           value="viewer"
+          [(ngModel)]="selectedRole"
           class="neumorphic-radio"
         />
         <span>
@@ -53,6 +56,7 @@
           type="radio"
           name="adminRole"
           value="manager"
+          [(ngModel)]="selectedRole"
           class="neumorphic-radio"
         />
         <span>
@@ -66,6 +70,7 @@
           type="radio"
           name="adminRole"
           value="superadmin"
+          [(ngModel)]="selectedRole"
           class="neumorphic-radio"
         />
         <span>

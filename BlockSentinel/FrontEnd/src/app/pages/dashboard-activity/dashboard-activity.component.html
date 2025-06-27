@@ -1,47 +1,46 @@
 <!-- Activity Log Card -->
-<div class="bg-[#011F2F] shadow-lg rounded-lg mt-6 px-6 py-4 text-white max-h-[500px] overflow-y-auto">
-    <!-- Card Header -->
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-semibold">Activity Log</h2>
-      <!-- Download Dropdown -->
-      <div class="relative">
-        <button (click)="toggleDownloadDropdown()" class="border border-[#00121C] text-white px-4 py-1 rounded-md bg-[#00121C]">
-          Download
-        </button>
-        <div *ngIf="isDownloadDropdownOpen" class="absolute right-0 mt-1 bg-[#00121C] text-sm rounded shadow-lg w-36 z-10">
-          <a href="#" class="block px-3 py-2 hover:bg-[#0E8CCF] rounded-md">PDF</a>
-          <a href="#" class="block px-3 py-2 hover:bg-[#0E8CCF] rounded-md">CSV</a>
-          <a href="#" class="block px-3 py-2 hover:bg-[#0E8CCF] rounded-md">Excel</a>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Table -->
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm text-left">
-        <thead class="bg-[#00121C] text-white">
-          <tr>
-            <th class="py-2 px-3">Timestamp</th>
-            <th class="py-2 px-3">User</th>
-            <th class="py-2 px-3">Action</th>
-            <th class="py-2 px-3">Affected Data / System</th>
-            <th class="py-2 px-3">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let activity of activities" class="border-b border-[#0E8CCF]/20">
-            <td class="py-2 px-3">{{ activity.timestamp }}, {{ activity.time }}</td>
-            <td class="py-2 px-3">{{ activity.user }}</td>
-            <td class="py-2 px-3">{{ activity.action }}</td>
-            <td class="py-2 px-3">{{ activity.affectedData }}</td>
-            <td class="py-2 px-3 font-medium">
-              <span *ngIf="activity.status === 'Success'" class="text-white">🟢 Success</span>
-              <span *ngIf="activity.status === 'Failed'" class="text-white">🔴 Failed</span>
-              <span *ngIf="activity.status === 'Warning'" class="text-white">🟠 Warning</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+<div class="bg-[#011F2F] shadow-lg rounded-lg mt-6 px-6 py-4 text-white max-h-[600px] overflow-y-auto">
+  <!-- Card Header -->
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold">Activity Log</h2>
+    <div class="flex gap-2 items-center">
+      <!-- Filter input -->
+      <input
+        [(ngModel)]="searchText"
+        type="text"
+        placeholder="Filter logs..."
+        class="border border-[#00121C] text-white px-3 py-1 rounded-md text-sm bg-[#00121C]"
+      />
+      <!-- PDF Download Button -->
+      <button (click)="downloadPDF()" class="border border-[#00121C] text-white px-4 py-1 rounded-md bg-[#00121C]">
+        Download PDF
+      </button>
     </div>
   </div>
-  
+
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm text-left">
+      <thead class="bg-[#00121C] text-white">
+        <tr>
+          <th class="py-2 px-3">Timestamp</th>
+          <th class="py-2 px-3">User</th>
+          <th class="py-2 px-3">Action</th>
+          <th class="py-2 px-3">Affected Data / System</th>
+          <th class="py-2 px-3">System ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let activity of filteredActivities()" class="border-b border-[#0E8CCF]/20">
+          <td class="py-2 px-3">{{ activity.timestamp }}, {{ activity.time }}</td>
+          <td class="py-2 px-3">{{ activity.user }}</td>
+          <td class="py-2 px-3">{{ activity.action }}</td>
+          <td class="py-2 px-3">{{ activity.affectedData }}</td>
+          <td class="py-2 px-3 font-medium">
+            <span class="text-white">🔹 {{ activity.status }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

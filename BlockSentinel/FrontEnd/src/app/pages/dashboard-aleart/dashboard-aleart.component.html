@@ -1,51 +1,112 @@
 <!-- Alert Notification Card -->
 <div class="bg-[#011F2F] shadow-lg rounded-lg mt-6 px-6 py-4 text-white max-h-[500px] overflow-y-auto">
-    <!-- Card Header -->
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-semibold">Alert Notification</h2>
-      <!-- Download Dropdown -->
-      <div class="relative">
-        <button (click)="toggleDownloadDropdown()" class="border border-[#00121C] text-white px-4 py-1 rounded-md bg-[#00121C]">
-          Download
-        </button>
-        <div *ngIf="isDownloadDropdownOpen" class="absolute right-0 mt-1 bg-[#00121C] text-sm rounded shadow-lg w-36 z-10">
-          <a href="#" class="block px-3 py-2 hover:bg-[#0E8CCF] rounded-md">PDF</a>
-          <a href="#" class="block px-3 py-2 hover:bg-[#0E8CCF] rounded-md">CSV</a>
-          <a href="#" class="block px-3 py-2 hover:bg-[#0E8CCF] rounded-md">Excel</a>
-        </div>
+  <!-- Card Header -->
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold">Alert Notification</h2>
+    <input
+      [(ngModel)]="searchText"
+      type="text"
+      placeholder="Filter logs..."
+      class="border border-[#00121C] text-white px-3 py-1 rounded-md text-sm bg-[#00121C]"
+    />
+    <button (click)="downloadPDF()" class="border border-[#00121C] text-white px-4 py-1 rounded-md bg-[#00121C]">
+      Download PDF
+    </button>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm text-left">
+      <thead class="bg-[#00121C] text-white">
+        <tr>
+          <th class="py-2 px-3">Severity</th>
+          <th class="py-2 px-3">Alert Message</th>
+          <th class="py-2 px-3">Date & Time</th>
+          <th class="py-2 px-3">System ID</th>
+          <th class="py-2 px-3">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let alert of filteredAlerts()" class="border-b border-[#0E8CCF]/20">
+          <td class="py-2 px-3 font-medium">
+            <span *ngIf="alert.severity === 'Critical'">🔴 Critical</span>
+            <span *ngIf="alert.severity === 'Warning'">🟠 Warning</span>
+            <span *ngIf="alert.severity === 'Info'">🔵 Info</span>
+          </td>
+          <td class="py-2 px-3">{{ alert.message }}</td>
+          <td class="py-2 px-3">{{ alert.date }}, {{ alert.time }}</td>
+          <td class="py-2 px-3">{{ alert.systemId }}</td>
+          <td class="py-2 px-3">
+            <button
+              (click)="openModal(alert)"
+              class="bg-[#00121C] px-3 py-1 rounded text-white hover:bg-[#007bb5] transition"
+            >
+              View More
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div
+  *ngIf="selectedAlert"
+  class="fixed inset-0 bg-[#00000090] backdrop-blur-sm bg-opacity-60 flex justify-center items-center z-50"
+>
+  <!-- Modal Container -->
+  <div
+    class="bg-[#011F2F] rounded-lg shadow-lg max-w-3xl w-full max-h-[80vh] overflow-y-auto p-6 text-white relative"
+  >
+    <!-- Close Button -->
+    <button
+      (click)="closeModal()"
+      class="absolute top-3 right-3 text-white hover:text-red-500 text-2xl font-bold"
+      aria-label="Close modal"
+    >
+      &times;
+    </button>
+
+    <h3 class="text-2xl font-semibold mb-4">Alert Details</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <strong>ID:</strong>
+        <p class="break-all">{{ selectedAlert.id }}</p>
+      </div>
+      <div>
+        <strong>Timestamp:</strong>
+        <p>{{ selectedAlert.date }} {{ selectedAlert.time }}</p>
+      </div>
+      <div>
+        <strong>System ID:</strong>
+        <p>{{ selectedAlert.systemId }}</p>
+      </div>
+      <div>
+        <strong>User:</strong>
+        <p>{{ selectedAlert.user || 'N/A' }}</p>
+      </div>
+      <div>
+        <strong>Event Type:</strong>
+        <p>{{ selectedAlert.event_type || 'N/A' }}</p>
+      </div>
+      <div>
+        <strong>Severity:</strong>
+        <p>{{ selectedAlert.severity }}</p>
+      </div>
+      <div>
+        <strong>Source:</strong>
+        <p>{{ selectedAlert.source || 'N/A' }}</p>
+      </div>
+      <div class="md:col-span-2">
+        <strong>Description:</strong>
+        <p class="whitespace-pre-wrap">{{ selectedAlert.message }}</p>
+      </div>
+      <div class="md:col-span-2">
+        <strong>Metadata:</strong>
+        <pre class="bg-[#00121C] p-3 rounded max-h-48 overflow-auto text-xs">{{ selectedAlert.metadata | json }}</pre>
       </div>
     </div>
-  
-    <!-- Table -->
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm text-left">
-        <thead class="bg-[#00121C] text-white">
-          <tr>
-            <th class="py-2 px-3">Severity</th>
-            <th class="py-2 px-3">Alert Message</th>
-            <th class="py-2 px-3">Date & Time</th>
-            <th class="py-2 px-3">Status</th>
-            <th class="py-2 px-3">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let alert of alerts" class="border-b border-[#0E8CCF]/20">
-            <td class="py-2 px-3 font-medium">
-              <span *ngIf="alert.severity === 'Critical'">🔴 Critical</span>
-              <span *ngIf="alert.severity === 'Warning'">🟠 Warning</span>
-              <span *ngIf="alert.severity === 'Info'">🔵 Info</span>
-            </td>
-            <td class="py-2 px-3">{{ alert.message }}</td>
-            <td class="py-2 px-3">{{ alert.date }}, {{ alert.time }}</td>
-            <td class="py-2 px-3">{{ alert.status }}</td>
-            <td class="py-2 px-3">
-              <button class="bg-[#00121C] px-3 py-1 rounded text-white hover:bg-[#007bb5] transition">
-                View More
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
-  
+</div>

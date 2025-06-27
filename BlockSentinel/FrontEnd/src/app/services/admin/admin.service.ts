@@ -1,29 +1,26 @@
-import { Injectable } from '@angular/core';
+// services/admin/admin.service.ts
 import { HttpClient } from '@angular/common/http';
-import { Admin } from '../../interface/admin';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Admin } from '../../interface/admin';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
-  private apiUrl = 'http://localhost:3009/admins'; // JSON server
+  private baseUrl = 'http://localhost:8000/settings/admins/';
 
   constructor(private http: HttpClient) {}
 
   getAdmins(): Observable<Admin[]> {
-    return this.http.get<Admin[]>(this.apiUrl);
+    return this.http.get<Admin[]>(this.baseUrl);
   }
 
-  deleteAdmin(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  updateAdmin(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}${id}/`, data);
   }
 
-  updateAdmin(id: number, editAdminForm: { id: number; name: string; email: string; role: string; permission: string; password: string; confirmPassword: string; }, admin: Admin): Observable<Admin> {
-    return this.http.put<Admin>(`${this.apiUrl}/${admin.id}`, admin);
-  }
-
-  addAdmin(admin: Admin): Observable<Admin> {
-    return this.http.post<Admin>(this.apiUrl, admin);
+  deleteAdmin(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}${id}/`);
   }
 }

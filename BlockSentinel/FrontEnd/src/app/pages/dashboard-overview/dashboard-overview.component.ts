@@ -133,7 +133,7 @@ export class DashboardOverviewComponent implements OnInit {
           cpuData.shift();
         }
       });
-    }, 5000);
+    }, 10000);
   }
 
   toggleMenu(id: string): void {

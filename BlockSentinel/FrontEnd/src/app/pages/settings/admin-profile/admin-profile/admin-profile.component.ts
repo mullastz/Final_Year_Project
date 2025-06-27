@@ -1,45 +1,68 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { AdminService } from '../../../../services/admin/admin.service';
 import { Admin } from '../../../../interface/admin';
-import { Router } from '@angular/router';
+import { AdminProfileService } from '../../../../services/admin-profile/admin-profile.service';
 
 @Component({
   selector: 'app-admin-profile',
+  standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './admin-profile.component.html',
 })
-export class AdminProfileComponent {
+export class AdminProfileComponent implements OnInit {
+  constructor(
+    private adminService: AdminService,
+    private router: Router,
+    private adminProfileService: AdminProfileService
+  ) {}
 
-navigateToAddNewAdmin() {
-  this.router.navigate(['/dashboard-pages/settings/add-new-admin']);
-}
+  ngOnInit(): void {
+    this.loadAdmins();
+    this.loadAdminProfile();
+  }
+
+  // --- 🔄 Dynamic Admin Profile Logic ---
   admin = {
-    name: 'John Doe',
-    email: 'john@example.com',
-    photo: '',
-  };
-
-  editForm = {
     name: '',
     email: '',
     photo: ''
   };
 
-  showEditModal = false;
-  http: any;
-  passwordsMatch: boolean | undefined;
-  showPassword: boolean | undefined;
-  showConfirmPassword: boolean | undefined;
+  editForm = {
+    name: '',
+    email: '',
+    photo: null as File | string | null,
+    photoPreview: ''
+  };
 
-  openEditModal() {
-    this.editForm = { ...this.admin };
+  showEditModal = false;
+
+  loadAdminProfile(): void {
+    this.adminProfileService.getAdminProfile().subscribe(res => {
+      this.admin = {
+        name: res.display_name || 'No Name',
+        email: res.user?.email || 'No Email',
+        photo: res.profile_photo ? `http://localhost:8000${res.profile_photo}` : ''
+      };
+  
+      this.editForm = {
+        name: res.display_name || '',
+        email: res.user?.email || '',
+        photo: res.profile_photo || '',
+        photoPreview: res.profile_photo ? `http://localhost:8000${res.profile_photo}` : ''
+      };
+    });
+  }
+  
+
+  openEditModal(): void {
     this.showEditModal = true;
   }
 
-  closeEditModal() {
+  closeEditModal(): void {
     this.showEditModal = false;
   }
 
@@ -51,43 +74,50 @@ navigateToAddNewAdmin() {
   handleImageUpload(event: any) {
     const file = event.target.files[0];
     if (file) {
+      this.editForm.photo = file;
+
       const reader = new FileReader();
       reader.onload = () => {
-        this.editForm.photo = reader.result as string;
+        this.editForm.photoPreview = reader.result as string;
       };
       reader.readAsDataURL(file);
     }
   }
 
-  submitChanges() {
-    this.admin = { ...this.editForm };
-    this.closeEditModal();
+  submitChanges(): void {
+    const formData = new FormData();
+    formData.append('name', this.editForm.name);
+    formData.append('email', this.editForm.email);
 
-    // TODO: Send updated data to backend
-    console.log('Updated Admin Info:', this.admin);
+    if (this.editForm.photo && typeof this.editForm.photo !== 'string') {
+      formData.append('photo', this.editForm.photo);
+    }
+
+    this.adminProfileService.updateAdminProfile(formData).subscribe({
+      next: () => {
+        this.loadAdminProfile();
+        this.closeEditModal();
+      },
+      error: (err) => {
+        console.error('Update failed:', err);
+      }
+    });
   }
 
-  // ----------- Security Section Logic ------------
+  // --- ➕ Add New Admin Routing ---
+  navigateToAddNewAdmin() {
+    this.router.navigate(['/dashboard-pages/settings/add-new-admin']);
+  }
 
+  // --- 🔐 Security Section Logic ---
   showPasswordModal = false;
-  passwordFocus: string = '';
+  passwordFocus = '';
   passwordMatchStatus: 'empty' | 'match' | 'mismatch' = 'empty';
-
-
-  passwordForm = {
-    current: '',
-    new: '',
-    confirm: ''
-  };
-
-  passwordVisible = {
-    current: false,
-    new: false,
-    confirm: false
-  };
-
+  passwordForm = { current: '', new: '', confirm: '' };
+  passwordVisible = { current: false, new: false, confirm: false };
   passwordStrength: 'weak' | 'medium' | 'strong' | '' = '';
   passwordTips: string[] = [];
+  matchTips: string[] = [];
 
   openPasswordModal() {
     this.showPasswordModal = true;
@@ -98,12 +128,8 @@ navigateToAddNewAdmin() {
     this.passwordForm = { current: '', new: '', confirm: '' };
     this.passwordStrength = '';
     this.passwordTips = [];
-    this.passwordFocus = '';
-    this.passwordVisible = {
-      current: false,
-      new: false,
-      confirm: false
-    };
+    this.matchTips = [];
+    this.passwordVisible = { current: false, new: false, confirm: false };
   }
 
   togglePasswordVisibility(field: 'current' | 'new' | 'confirm') {
@@ -114,30 +140,26 @@ navigateToAddNewAdmin() {
     this.checkPasswordStrength();
     this.checkPasswordsMatch();
   }
-  
+
   onConfirmPasswordChange() {
     this.checkPasswordsMatch();
   }
 
-  matchTips: string[] = [];
-
-checkPasswordsMatch() {
-  const { new: newPassword, confirm: confirmPassword } = this.passwordForm;
-
-  if (!newPassword || !confirmPassword) {
-    this.matchTips = [];
-  } else if (newPassword === confirmPassword) {
-    this.matchTips = ['✔ Passwords match.'];
-  } else {
-    this.matchTips = ['✖ Passwords do not match.'];
+  checkPasswordsMatch() {
+    const { new: newPassword, confirm: confirmPassword } = this.passwordForm;
+    if (!newPassword || !confirmPassword) {
+      this.matchTips = [];
+    } else if (newPassword === confirmPassword) {
+      this.matchTips = ['✔ Passwords match.'];
+    } else {
+      this.matchTips = ['✖ Passwords do not match.'];
+    }
   }
-}
 
-  
   checkPasswordStrength() {
     const password = this.passwordForm.new;
-    let strength = 0;
     const tips: string[] = [];
+    let strength = 0;
 
     if (password.length >= 8) strength++; else tips.push('Minimum 8 characters');
     if (/[A-Z]/.test(password)) strength++; else tips.push('At least one uppercase letter');
@@ -146,49 +168,45 @@ checkPasswordsMatch() {
     if (/[^A-Za-z0-9]/.test(password)) strength++; else tips.push('At least one special character');
 
     this.passwordTips = tips;
-
-    if (strength <= 2) {
-      this.passwordStrength = 'weak';
-    } else if (strength <= 4) {
-      this.passwordStrength = 'medium';
-    } else {
-      this.passwordStrength = 'strong';
-    }
+    if (strength <= 2) this.passwordStrength = 'weak';
+    else if (strength <= 4) this.passwordStrength = 'medium';
+    else this.passwordStrength = 'strong';
   }
-  
+
   submitPasswordChange() {
     if (!this.passwordForm.current) {
       alert('Please enter your current password first.');
       return;
     }
-
     if (this.passwordForm.new !== this.passwordForm.confirm) {
-      alert('Passwords do not match!');
+      alert('New passwords do not match!');
       return;
     }
-
-    if (this.passwordForm.new == this.passwordForm.confirm) {
-      alert('Passwords match');
-      return;
-    }
-    
-
-    // Send passwordForm to your backend here
-    console.log('Password change submitted', this.passwordForm);
-
+  
+    this.adminProfileService.changeAdminPassword({
+      current_password: this.passwordForm.current,
+      new_password: this.passwordForm.new,
+      confirm_password: this.passwordForm.confirm
+    }).subscribe({
+      next: (res: any) => {
+        alert((res as any).success || 'Password changed.');
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = '/login';
+      },
+      
+      error: (err) => {
+        alert(err.error?.error || 'Failed to change password.');
+      }
+    });
+  
     this.closePasswordModal();
   }
+  
 
+  // --- 👥 Manage Admin Logic ---
   admins: Admin[] = [];
   dropdownOpen: number | null = null;
-
-  constructor(private adminService: AdminService,
-    private router: Router
-  ) {}
-
-  ngOnInit(): void {
-    this.loadAdmins();
-  }
 
   loadAdmins() {
     this.adminService.getAdmins().subscribe(data => {
@@ -207,91 +225,82 @@ checkPasswordsMatch() {
   }
 
   editAdmin(admin: Admin) {
-    // Open your role modal here (next step)
     console.log('Editing admin:', admin);
   }
 
+  // --- Admin Edit Modal for Roles ---
   showAdminEditModal = false;
-editAdminForm = {
-  id: 0, // Added id property
-  name: '',
-  email: '',
-  role: '',
-  permission: '',
-  password: '',
-  confirmPassword: ''
-};
-
-editPasswordVisible = false;
-editConfirmVisible = false;
-editPasswordStrength = '';
-editPasswordTips: string[] = [];
-
-openAdminEditModal(admin: any) {
-  this.editAdminForm = { ...admin, confirmPassword: '' };
-  this.showAdminEditModal = true;
-}
-
-// Renamed to avoid duplication
-openAdminEditModalWithData(admin: any) {
-  this.editAdminForm = {
-    id: admin.id,
-    name: admin.name,
-    email: admin.email,
-    role: admin.role,
-    permission: admin.permissions,
+  editAdminForm = {
+    id: 0,
+    name: '',
+    email: '',
+    role: '',
+    permission: '',
     password: '',
     confirmPassword: ''
   };
+  editPasswordVisible = false;
+  editConfirmVisible = false;
+  editPasswordStrength = '';
+  editPasswordTips: string[] = [];
 
-  this.passwordStrength = '';
-  this.passwordStrength = '';
-  this.passwordsMatch = true;
-  this.showPassword = false;
-  this.showConfirmPassword = false;
-
-  this.showEditModal = true;
-}
-
-
-closeAdminEditModal() {
-  this.showAdminEditModal = false;
-}
-
-submitEditAdmin() {
-  if (this.editAdminForm.password !== this.editAdminForm.confirmPassword) {
-    alert('Passwords do not match');
-    return;
+  openAdminEditModal(admin: any) {
+    this.editAdminForm = { ...admin, confirmPassword: '' };
+    this.showAdminEditModal = true;
   }
 
-  // Update the admin via JSON server
-  this.http.put(`http://localhost:3009/admins/${this.editAdminForm.id}`, this.editAdminForm).subscribe(() => {
-    this.loadAdmins(); // refetch from backend
-    this.closeAdminEditModal();
-  });
+  closeAdminEditModal() {
+    this.showAdminEditModal = false;
+  }
+
+  submitEditAdmin() {
+    if (this.editAdminForm.password && this.editAdminForm.password !== this.editAdminForm.confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+  
+    const data: any = {
+      admin_name: this.editAdminForm.name,
+      email: this.editAdminForm.email,
+      role: this.editAdminForm.role
+    };
+  
+    if (this.editAdminForm.password) {
+      data.password = this.editAdminForm.password;
+    }
+  
+    this.adminService.updateAdmin(this.editAdminForm.id, data).subscribe({
+      next: () => {
+        alert('Admin updated successfully.');
+        this.loadAdmins(); // Refresh
+        this.closeAdminEditModal();
+      },
+      error: (err) => {
+        alert('Failed to update admin.');
+        console.error(err);
+      }
+    });
+  }
+  
+
+  checkEditPasswordStrength() {
+    const pwd = this.editAdminForm.password;
+    const tips: string[] = [];
+
+    if (pwd.length < 8) tips.push('Minimum 8 characters');
+    if (!/[A-Z]/.test(pwd)) tips.push('At least one uppercase letter');
+    if (!/[a-z]/.test(pwd)) tips.push('At least one lowercase letter');
+    if (!/[0-9]/.test(pwd)) tips.push('At least one number');
+    if (!/[^A-Za-z0-9]/.test(pwd)) tips.push('At least one special character');
+
+    this.editPasswordTips = tips;
+
+    if (tips.length === 0) this.editPasswordStrength = 'strong';
+    else if (tips.length <= 2) this.editPasswordStrength = 'medium';
+    else this.editPasswordStrength = 'weak';
+  }
+
+  checkEditPasswordMatch() {
+    // Optional: add visual cue if password matches
+  }
 }
-
-checkEditPasswordStrength() {
-  const pwd = this.editAdminForm.password;
-  this.editPasswordTips = [];
-  const tips = [];
-
-  if (pwd.length < 8) tips.push('Minimum 8 characters');
-  if (!/[A-Z]/.test(pwd)) tips.push('At least one uppercase letter');
-  if (!/[a-z]/.test(pwd)) tips.push('At least one lowercase letter');
-  if (!/[0-9]/.test(pwd)) tips.push('At least one number');
-  if (!/[^A-Za-z0-9]/.test(pwd)) tips.push('At least one special character');
-
-  this.editPasswordTips = tips;
-
-  if (tips.length === 0) this.editPasswordStrength = 'strong';
-  else if (tips.length <= 2) this.editPasswordStrength = 'medium';
-  else this.editPasswordStrength = 'weak';
-}
-
-checkEditPasswordMatch() {
-  // Optional: visual cue if password matches
-}
-
-}
-

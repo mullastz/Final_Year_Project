@@ -12,22 +12,26 @@ import uuid
 import re
 from datetime import datetime
 from .ledger_helpers import find_ledger_entry
+from auditlog.monitoring_engine import start_monitoring_agent
+from detection_engine.anomaly_service import AnomalyDetectionService
 
 
+BACKEND_URL = "http://127.0.0.1:8000"
 
 def install_agent(system_url: str) -> bool:
     """
-    Tries to contact the registered system and trigger the agent installation.
+    Tries to contact the external system and trigger HookAgent installation via /install-agent/ endpoint.
     Returns True if successful, False otherwise.
     """
     try:
         response = requests.post(f"{system_url}/install-agent/", timeout=5)
         response.raise_for_status()
+        print(f"[INFO] HookAgent installation triggered successfully on {system_url}")
         return True
     except RequestException as e:
-        # You can log this error for debugging or store it in DB
         print(f"[ERROR] Failed to install agent at {system_url}: {e}")
         return False
+
 
 def discover_databases(system_url: str) -> list:
     try:
@@ -118,6 +122,15 @@ def fetch_database_names(ip_address: str, db_type: str, credentials: dict) -> Li
         print(f"Error fetching DBs: {e}")
         return []
 
+def group_credentials_by_db_type(credentials_map):
+    grouped = {}
+    for db_cred in credentials_map.values():
+        db_type = db_cred.get("type")
+        if db_type:
+            grouped[db_type] = db_cred
+    return grouped
+
+
 def extract_data_from_system(system_url: str, databases: list, credentials_map: dict, system_id: str):
     all_data = {}
 
@@ -145,6 +158,8 @@ def extract_data_from_system(system_url: str, databases: list, credentials_map: 
             print(f"[ERROR] Extraction failed for {db_name}: {e}")
 
     return all_data
+
+    
 
 def get_ledger_data(system_id: str):
     """
@@ -251,6 +266,7 @@ def get_table_data_by_table_id(sys_id, table_id):
         "columns": table_data.get("columns", []),
         "rows": table_data.get("rows", [])
     }
+
 
 
 def install_agent(system_url):

@@ -1,10 +1,13 @@
 export interface Alert {
-    id: string;
-    severity: 'Critical' | 'Warning' | 'Info';
-    message: string;
-    date: string;      // format: YYYY-MM-DD
-    time: string;      // format: HH:MM:SS
-    status: 'Resolved' | 'Unresolved';
-    systemId: string;
-  }
-  
+  id: string;
+  timestamp?: string;   // raw timestamp string if available
+  date: string;         // extracted from timestamp
+  time: string;         // extracted from timestamp
+  systemId: string;
+  user?: string;
+  event_type?: string;
+  message: string;      // maps from description
+  severity: string;
+  source?: string;
+  metadata?: any;
+}

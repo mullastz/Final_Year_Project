@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-new-admin',
@@ -111,24 +112,70 @@ export class AddNewAdminComponent {
       alert('Please complete all fields and make sure passwords match.');
       return;
     }
-
+  
     const newAdmin = {
       name: this.adminName,
       email: this.adminEmail,
       role: this.selectedRole,
-      status: 'Active',
       password: this.passwordForm.new
     };
-
-    this.http.post('http://localhost:3009/admins', newAdmin).subscribe({
+  
+    const csrfToken = localStorage.getItem('csrfToken');
+  
+    this.http.post(
+      'http://127.0.0.1:8000/settings/admin/create/',
+      newAdmin,
+      {
+        headers: {
+          'X-CSRFToken': localStorage.getItem('csrfToken') || ''
+        },
+        withCredentials: true
+      }
+    )
+    .subscribe({
       next: () => {
-        console.log('Admin created successfully.');
+        alert('Admin created successfully.');
         this.router.navigate(['/dashboard-pages/settings/admin-profile']);
       },
       error: (err) => {
         console.error('Failed to create admin:', err);
-        alert('Failed to create admin. Try again.');
+        alert('Failed to create admin. Check console for details.');
       }
     });
   }
+  
+
+  ngOnInit(): void {
+    this.fetchCsrfToken();
+  }
+  
+  
+
+  getCookie(name: string): string | null {
+    const ca: Array<string> = document.cookie.split(';');
+    const cookieName = `${name}=`;
+    for (let c of ca) {
+      c = c.trim();
+      if (c.indexOf(cookieName) === 0) {
+        return c.substring(cookieName.length, c.length);
+      }
+    }
+    return null;
+  }
+
+  fetchCsrfToken(): void {
+    this.http.get<any>('http://127.0.0.1:8000/settings/settings/csrf-token/', {
+      withCredentials: true
+    }).subscribe({
+      next: (res) => {
+        localStorage.setItem('csrfToken', res.csrfToken);
+        console.log('CSRF token fetched:', res.csrfToken);
+      },
+      error: (err) => {
+        console.error('Failed to fetch CSRF token:', err);
+      }
+    });
+  }
+  
+  
 }

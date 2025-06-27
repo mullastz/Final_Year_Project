@@ -14,6 +14,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from datetime import datetime
+from auditlog.monitoring_engine import start_monitoring_agent 
 
 
 logger = logging.getLogger(__name__)  # optional logger for production use
@@ -136,9 +137,11 @@ class FetchDatabaseNamesView(APIView):
 
 class ExtractDataView(APIView):
     def post(self, request):
+        from auditlog.monitoring_engine import start_monitoring_agent  # safe to import inside method
+
         url = request.data.get('url')
-        dbs = request.data.get('db_name')
-        credentials_map = request.data.get('credentials')
+        dbs = request.data.get('db_name')  # List of {"name": "...", "type": "..."}
+        credentials_map = request.data.get('credentials')  # Dict of db_name -> credentials
         system_id = request.data.get('system_id')
 
         if not url or not dbs or not credentials_map or not system_id:
@@ -148,7 +151,7 @@ class ExtractDataView(APIView):
 
         for sys_id, sys_data in all_data.items():
             batch_id = str(uuid.uuid4())
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # ✅ NEW
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
             for db_name, db_content in sys_data.items():
                 tables_data = db_content.get("data", {})
@@ -175,7 +178,7 @@ class ExtractDataView(APIView):
                             schema,
                             rows,
                             timestamp,
-                            user=request.user  # ✅ Added here
+                            user=request.user
                         )
 
                         print(f"[✔] Stored table {table_name} from {db_name}")
@@ -183,12 +186,37 @@ class ExtractDataView(APIView):
                     except Exception as e:
                         print(f"[ERROR] Failed storing table {table_key}: {e}")
 
+        # ✅ Start MonitoringAgent here
+        try:
+            db_configs = {}
+
+            for db in dbs:
+                db_name = db['name']
+                if db_name in credentials_map:
+                    db_info = credentials_map[db_name]
+                    db_type = db_info.get("type")
+                    db_info_cleaned = {
+                        "host": db_info["host"],
+                        "port": int(db_info["port"]),
+                        "user": db_info["user"],
+                        "password": db_info["password"],
+                        "database": db_info["dbname"]
+                    }
+                    db_configs[db_type] = db_info_cleaned
+
+            backend_url = "http://127.0.0.1:8000"  # or use settings.BACKEND_URL
+            start_monitoring_agent(system_id, backend_url, db_configs)
+            print(f"[✔] Monitoring agent started for {system_id}")
+        except Exception as e:
+            print(f"[ERROR] Failed to start monitoring agent: {e}")
 
         return Response({
-            "message": "Data extracted and stored on blockchain",
+            "message": "Data extracted and stored on blockchain. Monitoring agent started.",
             "data": all_data
         }, status=200)
 
+    
+    
 class GetLedgerDataView(APIView):
     def get(self, request, system_id):
         from .services import get_ledger_data

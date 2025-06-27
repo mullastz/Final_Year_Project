@@ -3,105 +3,116 @@
     <h1 class="text-2xl font-bold">Admin Profile</h1>
   
     <!-- Section: Personal Information -->
-    <div>
-      <h6 class="text-lg font-medium mb-4">Personal Information</h6>
-  
-      <!-- Info Card -->
-      <div class="bg-[#00121C] shadow-lg rounded-lg p-6 flex justify-between items-center">
-        <!-- Left Side: Profile Info -->
-        <div class="flex items-center space-x-6">
-          <!-- Profile Image -->
-          <div class="w-24 h-24 rounded-full bg-[#0E8CCF] overflow-hidden border-4 border-[#00121C]">
-            <img *ngIf="admin.photo" [src]="admin.photo" alt="Profile" class="w-full h-full object-cover" />
-            <div *ngIf="!admin.photo" class="w-full h-full flex items-center justify-center text-3xl text-white">
-              <i class="fas fa-camera"></i>
-            </div>
-          </div>
-  
-          <!-- Name and Role -->
-          <div>
-            <h3 class="text-xl font-bold">{{ admin.name }}</h3>
-            <p class="text-gray-400 mt-1">Block Sentinel Admin</p> <!-- mt-1 adds spacing -->
+<div>
+  <h6 class="text-lg font-medium mb-4">Personal Information</h6>
+
+  <!-- Info Card -->
+  <div class="bg-[#00121C] shadow-lg rounded-lg p-6 flex justify-between items-center">
+    <!-- Left Side: Profile Info -->
+    <div class="flex items-center space-x-6">
+      <!-- Profile Image -->
+      <div class="w-24 h-24 rounded-full bg-[#0E8CCF] overflow-hidden border-4 border-[#00121C]">
+        <img *ngIf="admin.photo" [src]="admin.photo" alt="Profile" class="w-full h-full object-cover" />
+        <div *ngIf="!admin.photo" class="w-full h-full flex items-center justify-center text-3xl text-white">
+          <i class="fas fa-camera"></i>
+        </div>
+      </div>
+
+      <!-- Name and Role -->
+      <div>
+        <h3 class="text-xl font-bold">{{ admin.name }}</h3>
+        <p class="text-gray-400 mt-1">Block Sentinel Admin</p>
+      </div>
+    </div>
+
+    <!-- Edit Button -->
+    <button
+      (click)="openEditModal()"
+      class="bg-[#011F2F] px-4 py-2 rounded text-white flex items-center space-x-2 hover:bg-[#0E8CCF] transition"
+    >
+      <i class="fas fa-edit"></i>
+      <span>Edit</span>
+    </button>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div
+  *ngIf="showEditModal"
+  class="fixed inset-0 bg-[#00000090] backdrop-blur-sm flex items-center justify-center z-50"
+>
+  <div class="bg-[#011F2F] p-6 md:p-8 rounded-lg w-[90%] md:w-[600px] relative space-y-6">
+    <h2 class="text-center text-xl font-bold">Change Personal Information</h2>
+
+    <div class="flex flex-col md:flex-row gap-6">
+      <!-- Form Inputs -->
+      <div class="flex-1 space-y-4">
+        <div>
+          <label class="block mb-1 font-medium">Admin Name</label>
+          <div class="flex items-center bg-[#00121C] rounded px-3 w-full md:w-[250px]">
+            <i class="fas fa-user text-white mr-2"></i>
+            <input
+              [(ngModel)]="editForm.name"
+              type="text"
+              class="bg-transparent text-white py-2 outline-none w-full"
+              placeholder="Enter name"
+            />
           </div>
         </div>
-  
-        <!-- Right Side: Edit Button -->
-        <button
-          (click)="openEditModal()"
-          class="bg-[#011F2F] px-4 py-2 rounded text-white flex items-center space-x-2 hover:bg-[#0E8CCF] transition"
+
+        <div>
+          <label class="block mb-1 font-medium">Email</label>
+          <div class="flex items-center bg-[#00121C] rounded px-3 w-full md:w-[250px]">
+            <i class="fas fa-envelope text-white mr-2"></i>
+            <input
+              [(ngModel)]="editForm.email"
+              type="email"
+              class="bg-transparent text-white py-2 outline-none w-full"
+              placeholder="Enter email"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Image Upload -->
+      <div class="flex flex-col items-center justify-center space-y-2">
+        <div
+          class="w-28 h-28 rounded-full bg-[#0E8CCF] flex items-center justify-center overflow-hidden cursor-pointer relative"
+          (click)="triggerFileInput()"
         >
-          <i class="fas fa-edit"></i>
-          <span>Edit</span>
-        </button>
+          <img
+            *ngIf="editForm.photoPreview"
+            [src]="editForm.photoPreview"
+            class="w-full h-full object-cover"
+            alt="Preview"
+          />
+          <div *ngIf="!editForm.photoPreview" class="text-3xl text-white">
+            <i class="fas fa-camera"></i>
+          </div>
+          <input type="file" hidden #fileInput (change)="handleImageUpload($event)" />
+        </div>
+        <label class="text-sm text-white">Profile Photo</label>
       </div>
     </div>
-  </div>
-  
-  <!-- Edit Modal -->
-  <div
-    *ngIf="showEditModal"
-    class="fixed inset-0 bg-[#00000090] backdrop-blur-sm flex items-center justify-center z-50"
-  >
-    <div class="bg-[#011F2F] p-6 md:p-8 rounded-lg w-[90%] md:w-[600px] relative space-y-6">
-      <h2 class="text-center text-xl font-bold">Change Personal Information</h2>
-  
-      <div class="flex flex-col md:flex-row gap-6">
-        <!-- Form Inputs -->
-        <div class="flex-1 space-y-4">
-          <div>
-            <label class="block mb-1 font-medium">Admin Name</label>
-            <div class="flex items-center bg-[#00121C] rounded px-3 w-full md:w-[250px]">
-              <i class="fas fa-user text-white mr-2"></i>
-              <input
-                [(ngModel)]="editForm.name"
-                type="text"
-                class="bg-transparent text-white py-2 outline-none w-full"
-                placeholder="Enter name"
-              />
-            </div>
-          </div>
-  
-          <div>
-            <label class="block mb-1 font-medium">Email</label>
-            <div class="flex items-center bg-[#00121C] rounded px-3 w-full md:w-[250px]">
-              <i class="fas fa-envelope text-white mr-2"></i>
-              <input
-                [(ngModel)]="editForm.email"
-                type="email"
-                class="bg-transparent text-white py-2 outline-none w-full"
-                placeholder="Enter email"
-              />
-            </div>
-          </div>
-        </div>
-  
-        <!-- Profile Image Upload -->
-        <div class="flex flex-col items-center justify-center space-y-2">
-          <div
-            class="w-28 h-28 rounded-full bg-[#0E8CCF] flex items-center justify-center overflow-hidden cursor-pointer relative"
-            (click)="triggerFileInput()"
-          >
-            <img *ngIf="editForm.photo" [src]="editForm.photo" class="w-full h-full object-cover" />
-            <div *ngIf="!editForm.photo" class="text-3xl text-white">
-              <i class="fas fa-camera"></i>
-            </div>
-            <input type="file" hidden #fileInput (change)="handleImageUpload($event)" />
-          </div>
-          <label class="text-sm text-white">Profile Photo</label>
-        </div>
-      </div>
-  
-      <!-- Action Buttons -->
-      <div class="flex justify-between">
-        <button (click)="closeEditModal()" class="bg-[#00121C] px-4 py-2 rounded hover:bg-red-700 text-white">
-          Cancel
-        </button>
-        <button (click)="submitChanges()" class="bg-[#00121C] px-4 py-2 rounded hover:bg-green-600 text-white">
-          Change
-        </button>
-      </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-between">
+      <button
+        (click)="closeEditModal()"
+        class="bg-[#00121C] px-4 py-2 rounded hover:bg-red-700 text-white"
+      >
+        Cancel
+      </button>
+      <button
+        (click)="submitChanges()"
+        class="bg-[#00121C] px-4 py-2 rounded hover:bg-green-600 text-white"
+      >
+        Change
+      </button>
     </div>
   </div>
+</div>
+
 
  <!-- Section: Security -->
 <div class="p-6 text-white space-y-6 -mt-9">

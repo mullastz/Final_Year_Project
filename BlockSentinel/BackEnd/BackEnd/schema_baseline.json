@@ -1,0 +1,130 @@
+{
+    "auth_group": [
+        "id",
+        "name"
+    ],
+    "auth_group_permissions": [
+        "id",
+        "group_id",
+        "permission_id"
+    ],
+    "auth_permission": [
+        "id",
+        "name",
+        "content_type_id",
+        "codename"
+    ],
+    "auth_user": [
+        "id",
+        "password",
+        "last_login",
+        "is_superuser",
+        "username",
+        "first_name",
+        "last_name",
+        "email",
+        "is_staff",
+        "is_active",
+        "date_joined"
+    ],
+    "auth_user_groups": [
+        "id",
+        "user_id",
+        "group_id"
+    ],
+    "auth_user_user_permissions": [
+        "id",
+        "user_id",
+        "permission_id"
+    ],
+    "django_admin_log": [
+        "id",
+        "action_time",
+        "object_id",
+        "object_repr",
+        "action_flag",
+        "change_message",
+        "content_type_id",
+        "user_id"
+    ],
+    "django_content_type": [
+        "id",
+        "app_label",
+        "model"
+    ],
+    "django_migrations": [
+        "id",
+        "app",
+        "name",
+        "applied"
+    ],
+    "django_session": [
+        "session_key",
+        "session_data",
+        "expire_date"
+    ],
+    "evaluation_app_assignedlecmodules": [
+        "id",
+        "lecturer_id",
+        "module_id",
+        "department"
+    ],
+    "evaluation_app_lecturer": [
+        "id",
+        "first_name",
+        "last_name",
+        "email",
+        "department",
+        "password",
+        "is_department_admin"
+    ],
+    "evaluation_app_lecturerfeedback": [
+        "id",
+        "student_id",
+        "module_name",
+        "module_code",
+        "lecturer_first_name",
+        "lecturer_last_name",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "q8",
+        "q9",
+        "recommend",
+        "additional_comments"
+    ],
+    "evaluation_app_module": [
+        "id",
+        "name",
+        "code",
+        "credits",
+        "category",
+        "semester",
+        "year",
+        "nta_level",
+        "department"
+    ],
+    "evaluation_app_student": [
+        "id",
+        "first_name",
+        "last_name",
+        "email",
+        "contact",
+        "department",
+        "class_name",
+        "registration_no",
+        "nta_level",
+        "year_of_study",
+        "password"
+    ],
+    "evaluation_app_superadmin": [
+        "id",
+        "username",
+        "email",
+        "password"
+    ]
+}
